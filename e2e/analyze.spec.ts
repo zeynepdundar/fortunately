@@ -13,7 +13,10 @@ test("a sample fills the posting box and the page asks for a key", async ({
     /Senior Frontend Engineer/,
   );
 
-  await expect(page.getByRole("alert")).toContainText("Settings");
+  // Next.js adds its own empty role="alert" route announcer, so match ours by text.
+  await expect(
+    page.getByRole("alert").filter({ hasText: "Settings" }),
+  ).toBeVisible();
   await expect(
     page.getByRole("button", { name: "Extract requirements" }),
   ).toBeDisabled();
