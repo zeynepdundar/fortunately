@@ -2,7 +2,7 @@
 
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
-import type { ProviderId } from "@/lib/ai/provider";
+import type { ProviderId } from "@/lib/ai/provider-id";
 
 type SettingsState = {
   provider: ProviderId;
