@@ -84,6 +84,29 @@ describe("POST /api/extract", () => {
     });
   });
 
+  it("allows Ollama without a key", async () => {
+    const res = await POST(
+      request({ posting, provider: "ollama", modelId: "qwen3:8b" }),
+    );
+    expect(res.status).toBe(200);
+    expect(getModel).toHaveBeenCalledWith({
+      provider: "ollama",
+      modelId: "qwen3:8b",
+      apiKey: undefined,
+    });
+  });
+
+  it("rejects Ollama in production unless OLLAMA_BASE_URL is set", async () => {
+    vi.stubEnv("NODE_ENV", "production");
+    vi.stubEnv("OLLAMA_BASE_URL", "");
+    const res = await POST(
+      request({ posting, provider: "ollama", modelId: "qwen3:8b" }),
+    );
+    vi.unstubAllEnvs();
+    expect(res.status).toBe(400);
+    expect(await res.json()).toMatchObject({ error: "provider_disabled" });
+  });
+
   it("does not echo the key in error responses", async () => {
     const res = await POST(
       request(

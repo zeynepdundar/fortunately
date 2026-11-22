@@ -15,6 +15,7 @@ Paste a job posting (or its link). Fortunately streams out the requirements as t
 - **Agent trace panel** — every step and tool call with tokens, cost and latency.
 - **Evals** — 25 labelled synthetic postings; extraction precision / recall / F1 per model (table below).
 - **Bring your own key** — Anthropic or OpenAI. Your key stays in your browser session and is sent per request; it is never stored or logged.
+- **Free local mode** — run open models with [Ollama](https://ollama.com) on your machine, no key needed (local development only).
 
 ## Eval results
 
@@ -46,6 +47,15 @@ pnpm dev
 | `pnpm e2e`                                           | End-to-end tests (Playwright)                      |
 | `pnpm db:generate` / `pnpm db:migrate`               | Drizzle migrations                                 |
 | `pnpm eval`                                          | Run the eval set (uses your API key, costs tokens) |
+
+## Run with a free local model (Ollama)
+
+```bash
+ollama pull qwen3:8b   # about 5 GB; needs ~8 GB free RAM
+pnpm dev
+```
+
+Then open Settings, choose **Ollama (local)** and keep the model as `qwen3:8b`.
 
 ## Privacy
 

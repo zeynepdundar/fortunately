@@ -3,13 +3,14 @@
 import Link from "next/link";
 import { useState } from "react";
 import { DEFAULT_MODEL, MODEL_SUGGESTIONS } from "@/lib/ai/models";
-import { ProviderId } from "@/lib/ai/provider-id";
+import { needsApiKey, ProviderId } from "@/lib/ai/provider-id";
 import { useHydrated } from "@/lib/use-hydrated";
 import { useSettings } from "@/stores/settings";
 
 const PROVIDER_LABEL: Record<ProviderId, string> = {
   anthropic: "Anthropic",
   openai: "OpenAI",
+  ollama: "Ollama (local)",
 };
 
 const inputClass =
@@ -26,7 +27,8 @@ export function SettingsForm() {
     );
   }
 
-  const ready = apiKey.length > 0 && modelId.length > 0;
+  const keyRequired = needsApiKey(provider);
+  const ready = modelId.length > 0 && (!keyRequired || apiKey.length > 0);
 
   return (
     <form className="flex flex-col gap-5" onSubmit={(e) => e.preventDefault()}>
@@ -73,32 +75,53 @@ export function SettingsForm() {
         </span>
       </label>
 
-      <label className="flex flex-col gap-1.5 text-sm">
-        <span className="font-medium">{PROVIDER_LABEL[provider]} API key</span>
-        <div className="flex gap-2">
-          <input
-            className={`${inputClass} font-mono`}
-            type={showKey ? "text" : "password"}
-            value={apiKey}
-            onChange={(e) => set({ apiKey: e.target.value.trim() })}
-            autoComplete="off"
-            spellCheck={false}
-            placeholder={provider === "anthropic" ? "sk-ant-…" : "sk-…"}
-          />
-          <button
-            type="button"
-            onClick={() => setShowKey((v) => !v)}
-            className="rounded-md border border-neutral-300 px-3 text-sm dark:border-neutral-700"
+      {keyRequired ? (
+        <label className="flex flex-col gap-1.5 text-sm">
+          <span className="font-medium">
+            {PROVIDER_LABEL[provider]} API key
+          </span>
+          <div className="flex gap-2">
+            <input
+              className={`${inputClass} font-mono`}
+              type={showKey ? "text" : "password"}
+              value={apiKey}
+              onChange={(e) => set({ apiKey: e.target.value.trim() })}
+              autoComplete="off"
+              spellCheck={false}
+              placeholder={provider === "anthropic" ? "sk-ant-…" : "sk-…"}
+            />
+            <button
+              type="button"
+              onClick={() => setShowKey((v) => !v)}
+              className="rounded-md border border-neutral-300 px-3 text-sm dark:border-neutral-700"
+            >
+              {showKey ? "Hide" : "Show"}
+            </button>
+          </div>
+          <span className="text-xs text-neutral-500">
+            Stored only in this browser tab&apos;s session storage and sent with
+            each request. It is never saved or logged on the server, and it is
+            gone when you close the tab.
+          </span>
+        </label>
+      ) : (
+        <div className="rounded-md bg-neutral-50 px-3 py-2 text-sm text-neutral-600 dark:bg-neutral-900 dark:text-neutral-400">
+          Runs on your machine, free and without a key. Install{" "}
+          <a
+            href="https://ollama.com"
+            className="underline"
+            target="_blank"
+            rel="noreferrer"
           >
-            {showKey ? "Hide" : "Show"}
-          </button>
+            Ollama
+          </a>
+          , run{" "}
+          <code className="font-mono text-xs">
+            ollama pull {modelId || "qwen3:8b"}
+          </code>
+          , and keep it running. Only available in local development.
         </div>
-        <span className="text-xs text-neutral-500">
-          Stored only in this browser tab&apos;s session storage and sent with
-          each request. It is never saved or logged on the server, and it is
-          gone when you close the tab.
-        </span>
-      </label>
+      )}
 
       <div className="flex items-center justify-between gap-4 border-t border-neutral-200 pt-5 dark:border-neutral-800">
         <p className="text-sm" role="status">

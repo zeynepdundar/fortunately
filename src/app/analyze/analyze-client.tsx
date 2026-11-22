@@ -4,6 +4,7 @@ import { useObject } from "@ai-sdk/react";
 import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { RequirementRow } from "@/components/requirement-row";
+import { needsApiKey } from "@/lib/ai/provider-id";
 import { ExtractRequest, KEY_HEADER } from "@/lib/api/extract-contract";
 import type { SamplePosting } from "@/lib/samples";
 import { Extraction } from "@/lib/schemas";
@@ -23,7 +24,7 @@ function errorMessage(error: Error): string {
   } catch {
     // not JSON: a provider or network error
   }
-  return "Something went wrong. Check your API key and model in Settings, then try again.";
+  return "Something went wrong. Check your provider, model and API key in Settings (for Ollama: is it running?), then try again.";
 }
 
 export function AnalyzeClient({ samples }: { samples: SamplePosting[] }) {
@@ -35,12 +36,18 @@ export function AnalyzeClient({ samples }: { samples: SamplePosting[] }) {
   // Settings live in sessionStorage, so read them only after hydration.
   const hydrated = useHydrated();
   const { provider, modelId, apiKey } = useSettings();
-  const configured = hydrated && apiKey.length > 0 && modelId.length > 0;
+  const configured =
+    hydrated &&
+    modelId.length > 0 &&
+    (!needsApiKey(provider) || apiKey.length > 0);
 
   const { object, submit, isLoading, stop, error, clear } = useObject({
     api: "/api/extract",
     schema: Extraction,
-    headers: () => ({ [KEY_HEADER]: useSettings.getState().apiKey }),
+    headers: (): Record<string, string> => {
+      const key = useSettings.getState().apiKey;
+      return key ? { [KEY_HEADER]: key } : {};
+    },
   });
 
   const requirements = useMemo(() => object?.requirements ?? [], [object]);
@@ -119,7 +126,7 @@ export function AnalyzeClient({ samples }: { samples: SamplePosting[] }) {
             role="alert"
             className="rounded-md bg-amber-50 px-3 py-2 text-sm text-amber-800 dark:bg-amber-950 dark:text-amber-200"
           >
-            Add your API key and model in{" "}
+            Add a model (and an API key, unless you use Ollama) in{" "}
             <Link href="/settings" className="font-medium underline">
               Settings
             </Link>{" "}

@@ -21,3 +21,10 @@ test("Clear key removes the key", async ({ page }) => {
   await expect(page.getByLabel("Anthropic API key")).toHaveValue("");
   await expect(page.getByRole("status")).toContainText("Add a model and a key");
 });
+
+test("Ollama needs no key", async ({ page }) => {
+  await page.goto("/settings");
+  await page.getByLabel("Ollama (local)").check();
+  await expect(page.getByLabel("Model")).toHaveValue("qwen3:8b");
+  await expect(page.getByRole("status")).toContainText("Ready to analyze");
+});
