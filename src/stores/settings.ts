@@ -2,6 +2,7 @@
 
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
+import { DEFAULT_MODEL } from "@/lib/ai/models";
 import type { ProviderId } from "@/lib/ai/provider-id";
 
 type SettingsState = {
@@ -19,7 +20,7 @@ export const useSettings = create<SettingsState>()(
   persist(
     (set) => ({
       provider: "anthropic",
-      modelId: "",
+      modelId: DEFAULT_MODEL.anthropic,
       apiKey: "",
       set: (patch) => set(patch),
       clearKey: () => set({ apiKey: "" }),

@@ -2,20 +2,13 @@
 
 import { useObject } from "@ai-sdk/react";
 import Link from "next/link";
-import {
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-  useSyncExternalStore,
-} from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { RequirementRow } from "@/components/requirement-row";
 import { ExtractRequest, KEY_HEADER } from "@/lib/api/extract-contract";
 import type { SamplePosting } from "@/lib/samples";
 import { Extraction } from "@/lib/schemas";
+import { useHydrated } from "@/lib/use-hydrated";
 import { useSettings } from "@/stores/settings";
-
-const noopSubscribe = () => () => {};
 
 /** Server errors arrive as the JSON body in error.message. */
 function errorMessage(error: Error): string {
@@ -40,11 +33,7 @@ export function AnalyzeClient({ samples }: { samples: SamplePosting[] }) {
   const startedAt = useRef<number | null>(null);
 
   // Settings live in sessionStorage, so read them only after hydration.
-  const hydrated = useSyncExternalStore(
-    noopSubscribe,
-    () => true,
-    () => false,
-  );
+  const hydrated = useHydrated();
   const { provider, modelId, apiKey } = useSettings();
   const configured = hydrated && apiKey.length > 0 && modelId.length > 0;
 
