@@ -29,7 +29,7 @@ export function streamExtraction({
 }: {
   model: LanguageModel;
   posting: string;
-  /** Prefix the prompt with /no_think (only for models that support it). */
+  /** Turn off the model's hidden reasoning step (only for models that support it). */
   disableThinking?: boolean;
   abortSignal?: AbortSignal;
 }) {
@@ -39,6 +39,10 @@ export function streamExtraction({
     instructions: EXTRACTION_INSTRUCTIONS,
     prompt: `${prefix}Job posting:\n<posting>\n${posting}\n</posting>`,
     output: Output.object({ schema: Extraction }),
+    // Ollama ignores /no_think on its OpenAI-compatible API but honours reasoning_effort "none".
+    providerOptions: disableThinking
+      ? { ollama: { reasoningEffort: "none" } }
+      : undefined,
     abortSignal,
     // Log only the message: provider errors can carry request details.
     onError: ({ error }) => {

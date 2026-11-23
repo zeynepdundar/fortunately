@@ -93,7 +93,7 @@ describe("streamExtraction", () => {
     expect(text).toContain("<posting>\\nPOSTING BODY\\n</posting>");
   });
 
-  it("prefixes /no_think only when thinking is disabled", async () => {
+  it("turns thinking off only when asked", async () => {
     const off = mockModel(JSON.stringify({ requirements: [] }));
     await streamExtraction({
       model: off,
@@ -103,11 +103,15 @@ describe("streamExtraction", () => {
     expect(JSON.stringify(off.doStreamCalls[0].prompt)).toContain(
       "/no_think\\nJob posting",
     );
+    expect(off.doStreamCalls[0].providerOptions).toEqual({
+      ollama: { reasoningEffort: "none" },
+    });
 
     const on = mockModel(JSON.stringify({ requirements: [] }));
     await streamExtraction({ model: on, posting: "BODY" }).output;
     expect(JSON.stringify(on.doStreamCalls[0].prompt)).not.toContain(
       "/no_think",
     );
+    expect(on.doStreamCalls[0].providerOptions?.ollama).toBeUndefined();
   });
 });
