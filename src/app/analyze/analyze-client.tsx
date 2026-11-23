@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { RequirementRow } from "@/components/requirement-row";
 import { needsApiKey } from "@/lib/ai/provider-id";
+import { cleanPartialRequirements } from "@/lib/extraction";
 import { ExtractRequest, KEY_HEADER } from "@/lib/api/extract-contract";
 import type { SamplePosting } from "@/lib/samples";
 import { Extraction } from "@/lib/schemas";
@@ -50,7 +51,10 @@ export function AnalyzeClient({ samples }: { samples: SamplePosting[] }) {
     },
   });
 
-  const requirements = useMemo(() => object?.requirements ?? [], [object]);
+  const requirements = useMemo(
+    () => cleanPartialRequirements(object?.requirements ?? []),
+    [object],
+  );
   const mustCount = requirements.filter((r) => r?.kind === "must").length;
   const niceCount = requirements.filter((r) => r?.kind === "nice").length;
 

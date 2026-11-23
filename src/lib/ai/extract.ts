@@ -2,7 +2,7 @@ import { Output, streamText, type LanguageModel } from "ai";
 import { Extraction } from "@/lib/schemas";
 
 /** Bump when the instructions change, so eval results stay comparable. */
-export const EXTRACTION_PROMPT_VERSION = "extract-v2";
+export const EXTRACTION_PROMPT_VERSION = "extract-v3";
 
 export const EXTRACTION_INSTRUCTIONS = `You extract the candidate requirements from a job posting.
 Return one entry per requirement, in the order of the posting. Never add anything the posting does not ask for.
@@ -16,8 +16,8 @@ KIND
 - "nice": listed under Nice to have, Bonus, Should have, Preferred, or marked as "a plus".
 
 SPLITTING
-- Items joined by "and" or a comma become separate entries: "JavaScript and TypeScript" -> two entries.
-- Alternatives joined by "or", "such as" or "e.g." stay one entry.
+- Split only items joined by "and", where every item is required: "JavaScript and TypeScript" -> two entries, "5+ years of JavaScript" and "5+ years of TypeScript".
+- Alternatives stay ONE entry. A list is alternatives when it uses "or", "and/or", "such as", "e.g." or "or similar", even with commas: "Jest, Vitest or Mocha" -> one entry.
 
 TEXT
 - Copy the posting's own words. Keep technology names and anything in parentheses.
@@ -37,13 +37,14 @@ SKILL
 - every other category: null.
 
 MIN YEARS
-- The number of years if stated ("5+ years" -> 5), otherwise null. When you split an item, every entry keeps the years.
+- The number of years if stated ("5+ years" -> 5), otherwise null. Never 0. When you split an item, every entry keeps the years.
 
 EXAMPLES
 Posting lines:
   Requirements
   - 4+ years of Vue and Nuxt.
   - A state library such as Pinia or Vuex.
+  - Unit testing with Jest, Vitest or Mocha.
   - Experience leading a framework migration.
   Nice to have
   - Fluent Dutch.
@@ -51,6 +52,7 @@ Entries:
   {"text":"4+ years of Vue","kind":"must","category":"technology","skill":"vue","minYears":4}
   {"text":"4+ years of Nuxt","kind":"must","category":"technology","skill":"nuxt","minYears":4}
   {"text":"A state library such as Pinia or Vuex","kind":"must","category":"technology","skill":"pinia","minYears":null}
+  {"text":"Unit testing with Jest, Vitest or Mocha","kind":"must","category":"technology","skill":"jest","minYears":null}
   {"text":"Experience leading a framework migration","kind":"must","category":"experience","skill":null,"minYears":null}
   {"text":"Fluent Dutch","kind":"nice","category":"other","skill":null,"minYears":null}`;
 
