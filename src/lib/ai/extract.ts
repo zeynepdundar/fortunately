@@ -58,6 +58,12 @@ Entries:
   {"text":"Experience leading a framework migration","kind":"must","category":"experience","skills":[],"anyOf":false,"minYears":null}
   {"text":"Fluent Dutch","kind":"nice","category":"other","skills":[],"anyOf":false,"minYears":null}`;
 
+export type ExtractionResult = {
+  output: Extraction;
+  inputTokens?: number;
+  outputTokens?: number;
+};
+
 /** qwen3's soft switch that skips its hidden reasoning step. */
 export const NO_THINK = "/no_think";
 
@@ -66,12 +72,18 @@ export function streamExtraction({
   posting,
   disableThinking = false,
   abortSignal,
+  onComplete,
+  onFailure,
 }: {
   model: LanguageModel;
   posting: string;
   /** Turn off the model's hidden reasoning step (only for models that support it). */
   disableThinking?: boolean;
   abortSignal?: AbortSignal;
+  /** Called once with the validated output and token usage when the stream ends. */
+  onComplete?: (result: ExtractionResult) => Promise<void> | void;
+  /** Called once when the stream errors, is aborted or ends without valid output. */
+  onFailure?: () => Promise<void> | void;
 }) {
   const prefix = disableThinking ? `${NO_THINK}\n` : "";
   return streamText({
@@ -85,11 +97,26 @@ export function streamExtraction({
       : undefined,
     abortSignal,
     // Log only the message: provider errors can carry request details.
-    onError: ({ error }) => {
+    onError: async ({ error }) => {
       console.error(
         "[extract] stream error:",
         error instanceof Error ? error.message : String(error),
       );
+      await onFailure?.();
+    },
+    onAbort: async () => {
+      await onFailure?.();
+    },
+    onEnd: async (event) => {
+      if (!event.output) {
+        await onFailure?.();
+        return;
+      }
+      await onComplete?.({
+        output: event.output,
+        inputTokens: event.totalUsage.inputTokens,
+        outputTokens: event.totalUsage.outputTokens,
+      });
     },
   });
 }

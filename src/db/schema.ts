@@ -73,9 +73,8 @@ export const analyses = pgTable("analyses", {
   postingId: uuid("posting_id")
     .notNull()
     .references(() => postings.id, { onDelete: "cascade" }),
-  cvId: uuid("cv_id")
-    .notNull()
-    .references(() => cvs.id, { onDelete: "cascade" }),
+  /** Null for an extraction-only analysis (no CV matched yet). */
+  cvId: uuid("cv_id").references(() => cvs.id, { onDelete: "cascade" }),
   provider: text("provider").notNull(),
   model: text("model").notNull(),
   promptVersion: text("prompt_version").notNull(),

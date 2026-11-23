@@ -10,6 +10,7 @@ vi.mock("@/lib/ai/provider", async (importOriginal) => {
   return { ...actual, getModel: vi.fn(() => "mock-model") };
 });
 vi.mock("@/lib/ai/extract", () => ({
+  EXTRACTION_PROMPT_VERSION: "test-v",
   streamExtraction: vi.fn(() => ({
     stream: new ReadableStream({
       start(controller) {
@@ -24,7 +25,18 @@ vi.mock("@/lib/ai/extract", () => ({
   })),
 }));
 
+vi.mock("@/lib/persistence/workspace", () => ({
+  getOrCreateWorkspaceId: vi.fn(async () => null),
+}));
+vi.mock("@/lib/persistence/analyses", () => ({
+  startAnalysis: vi.fn(async () => "analysis-1"),
+  finishAnalysis: vi.fn(async () => {}),
+  failAnalysis: vi.fn(async () => {}),
+}));
+
 const { POST } = await import("./route");
+const { getOrCreateWorkspaceId } = await import("@/lib/persistence/workspace");
+const { startAnalysis } = await import("@/lib/persistence/analyses");
 const { KEY_HEADER } = await import("@/lib/api/extract-contract");
 const { getModel } = await import("@/lib/ai/provider");
 const { streamExtraction } = await import("@/lib/ai/extract");
@@ -132,6 +144,42 @@ describe("POST /api/extract", () => {
     expect(streamExtraction).toHaveBeenLastCalledWith(
       expect.objectContaining({ disableThinking: false }),
     );
+  });
+
+  it("does not save or send an analysis id without a database", async () => {
+    const res = await POST(
+      request({ posting, provider: "openai", modelId: "m" }, "sk-test"),
+    );
+    expect(res.headers.get("x-analysis-id")).toBeNull();
+    expect(startAnalysis).not.toHaveBeenCalled();
+  });
+
+  it("opens an analysis and returns its id when a workspace exists", async () => {
+    vi.mocked(getOrCreateWorkspaceId).mockResolvedValueOnce("ws-1");
+    const res = await POST(
+      request({ posting, provider: "openai", modelId: "m" }, "sk-test"),
+    );
+    expect(res.headers.get("x-analysis-id")).toBe("analysis-1");
+    expect(startAnalysis).toHaveBeenCalledWith(
+      expect.objectContaining({
+        workspaceId: "ws-1",
+        provider: "openai",
+        modelId: "m",
+      }),
+    );
+  });
+
+  it("still streams when saving fails", async () => {
+    vi.mocked(getOrCreateWorkspaceId).mockRejectedValueOnce(
+      new Error("db down"),
+    );
+    const spy = vi.spyOn(console, "error").mockImplementation(() => {});
+    const res = await POST(
+      request({ posting, provider: "openai", modelId: "m" }, "sk-test"),
+    );
+    spy.mockRestore();
+    expect(res.status).toBe(200);
+    expect(res.headers.get("x-analysis-id")).toBeNull();
   });
 
   it("does not echo the key in error responses", async () => {

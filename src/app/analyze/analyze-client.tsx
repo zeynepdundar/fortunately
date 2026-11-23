@@ -6,7 +6,11 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { RequirementRow } from "@/components/requirement-row";
 import { needsApiKey } from "@/lib/ai/provider-id";
 import { cleanPartialRequirements } from "@/lib/extraction";
-import { ExtractRequest, KEY_HEADER } from "@/lib/api/extract-contract";
+import {
+  ANALYSIS_ID_HEADER,
+  ExtractRequest,
+  KEY_HEADER,
+} from "@/lib/api/extract-contract";
 import type { SamplePosting } from "@/lib/samples";
 import { Extraction } from "@/lib/schemas";
 import { useHydrated } from "@/lib/use-hydrated";
@@ -34,6 +38,7 @@ export function AnalyzeClient({ samples }: { samples: SamplePosting[] }) {
   const [firstItemMs, setFirstItemMs] = useState<number | null>(null);
   const startedAt = useRef<number | null>(null);
   const [submittedPosting, setSubmittedPosting] = useState("");
+  const [analysisId, setAnalysisId] = useState<string | null>(null);
 
   // Settings live in sessionStorage, so read them only after hydration.
   const hydrated = useHydrated();
@@ -49,6 +54,12 @@ export function AnalyzeClient({ samples }: { samples: SamplePosting[] }) {
     headers: (): Record<string, string> => {
       const key = useSettings.getState().apiKey;
       return key ? { [KEY_HEADER]: key } : {};
+    },
+    // Read the saved analysis id from the response headers.
+    fetch: async (input, init) => {
+      const response = await fetch(input, init);
+      setAnalysisId(response.headers.get(ANALYSIS_ID_HEADER));
+      return response;
     },
   });
 
@@ -87,6 +98,7 @@ export function AnalyzeClient({ samples }: { samples: SamplePosting[] }) {
     clear();
     startedAt.current = performance.now();
     setSubmittedPosting(parsed.data.posting);
+    setAnalysisId(null);
     submit(parsed.data);
   }
 
@@ -210,6 +222,17 @@ export function AnalyzeClient({ samples }: { samples: SamplePosting[] }) {
               ? "Reading the posting…"
               : "Requirements will stream in here."}
           </div>
+        )}
+        {analysisId && !isLoading && !error && requirements.length > 0 && (
+          <p className="text-sm text-neutral-600 dark:text-neutral-400">
+            Saved.{" "}
+            <Link
+              href={`/analyses/${analysisId}`}
+              className="font-medium underline"
+            >
+              Open the permanent result
+            </Link>
+          </p>
         )}
       </section>
     </main>

@@ -4,6 +4,9 @@ import { ProviderId } from "@/lib/ai/provider-id";
 /** Header that carries the visitor's own API key (BYOK). Never stored or logged. */
 export const KEY_HEADER = "x-fortunately-key";
 
+/** Response header with the id of the saved analysis (absent when nothing is saved). */
+export const ANALYSIS_ID_HEADER = "x-analysis-id";
+
 /** Request body for POST /api/extract, shared by the route and the client. */
 export const ExtractRequest = z.object({
   posting: z

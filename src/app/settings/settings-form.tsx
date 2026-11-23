@@ -59,9 +59,13 @@ export function SettingsForm() {
         </div>
       </fieldset>
 
-      <label className="flex flex-col gap-1.5 text-sm">
-        <span className="font-medium">Model</span>
+      <div className="flex flex-col gap-1.5 text-sm">
+        <label htmlFor="model" className="font-medium">
+          Model
+        </label>
         <input
+          id="model"
+          aria-describedby="model-help"
           className={inputClass}
           list="model-suggestions"
           value={modelId}
@@ -74,36 +78,42 @@ export function SettingsForm() {
             <option key={m} value={m} />
           ))}
         </datalist>
-        <span className="text-xs text-neutral-500">
+        <p id="model-help" className="text-xs text-neutral-500">
           A small, fast model is enough for extraction and keeps costs low.
-        </span>
-      </label>
+        </p>
+      </div>
 
       {supportsThinkingToggle(provider, modelId) && (
-        <label className="flex items-start gap-3 text-sm">
+        <div className="flex items-start gap-3 text-sm">
           <input
+            id="thinking"
             type="checkbox"
             className="mt-1"
+            aria-describedby="thinking-help"
             checked={thinking}
             onChange={(e) => set({ thinking: e.target.checked })}
           />
-          <span>
-            <span className="font-medium">Thinking mode</span>
-            <span className="block text-xs text-neutral-500">
+          <div>
+            <label htmlFor="thinking" className="font-medium">
+              Thinking mode
+            </label>
+            <p id="thinking-help" className="text-xs text-neutral-500">
               Lets the model reason before answering. Slower; off is usually
               enough for extracting requirements.
-            </span>
-          </span>
-        </label>
+            </p>
+          </div>
+        </div>
       )}
 
       {keyRequired ? (
-        <label className="flex flex-col gap-1.5 text-sm">
-          <span className="font-medium">
+        <div className="flex flex-col gap-1.5 text-sm">
+          <label htmlFor="api-key" className="font-medium">
             {PROVIDER_LABEL[provider]} API key
-          </span>
+          </label>
           <div className="flex gap-2">
             <input
+              id="api-key"
+              aria-describedby="api-key-help"
               className={`${inputClass} font-mono`}
               type={showKey ? "text" : "password"}
               value={apiKey}
@@ -120,12 +130,12 @@ export function SettingsForm() {
               {showKey ? "Hide" : "Show"}
             </button>
           </div>
-          <span className="text-xs text-neutral-500">
+          <p id="api-key-help" className="text-xs text-neutral-500">
             Stored only in this browser tab&apos;s session storage and sent with
             each request. It is never saved or logged on the server, and it is
             gone when you close the tab.
-          </span>
-        </label>
+          </p>
+        </div>
       ) : (
         <div className="rounded-md bg-neutral-50 px-3 py-2 text-sm text-neutral-600 dark:bg-neutral-900 dark:text-neutral-400">
           Runs on your machine, free and without a key. Install{" "}

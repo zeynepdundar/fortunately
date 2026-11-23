@@ -1,0 +1,1 @@
+ALTER TABLE "analyses" ALTER COLUMN "cv_id" DROP NOT NULL;
