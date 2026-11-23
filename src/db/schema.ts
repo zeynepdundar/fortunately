@@ -98,8 +98,10 @@ export const requirements = pgTable("requirements", {
   text: text("text").notNull(),
   kind: requirementKind("kind").notNull(),
   category: requirementCategory("category").notNull(),
-  /** Canonical slug ("react"), so the gap dashboard can group across postings. */
-  skill: text("skill"),
+  /** Canonical slugs ("react"), so the gap dashboard can group across postings. */
+  skills: text("skills").array().notNull().default([]),
+  /** true when the skills are alternatives: any one is enough. */
+  anyOf: boolean("any_of").notNull().default(false),
   minYears: integer("min_years"),
 });
 

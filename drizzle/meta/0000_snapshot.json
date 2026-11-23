@@ -1,5 +1,5 @@
 {
-  "id": "dcc15588-0825-4488-8197-830476e3352b",
+  "id": "11952993-b2b5-4544-bdf8-7ae4221ac43b",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -389,11 +389,19 @@
           "primaryKey": false,
           "notNull": true
         },
-        "skill": {
-          "name": "skill",
-          "type": "text",
+        "skills": {
+          "name": "skills",
+          "type": "text[]",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true,
+          "default": "'{}'"
+        },
+        "any_of": {
+          "name": "any_of",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
         },
         "min_years": {
           "name": "min_years",

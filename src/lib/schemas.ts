@@ -13,8 +13,10 @@ export const Requirement = z.object({
     "soft_skill",
     "other",
   ]),
-  /** Canonical slug, e.g. "react". Null for non-technology items. */
-  skill: z.string().nullable(),
+  /** Every technology the requirement names, as canonical slugs ("react", "next-js"). */
+  skills: z.array(z.string()),
+  /** true when the skills are alternatives ("Vite, webpack or Turbopack"): any one is enough. */
+  anyOf: z.boolean(),
   minYears: z.number().int().nullable(),
 });
 export type Requirement = z.infer<typeof Requirement>;

@@ -64,7 +64,12 @@ export function RequirementRow({
             </Badge>
           )}
           {item?.category && <Badge>{CATEGORY_LABEL[item.category]}</Badge>}
-          {item?.skill && <Badge>{item.skill}</Badge>}
+          {item?.anyOf && (item.skills?.length ?? 0) > 1 && (
+            <span className="self-center text-xs text-neutral-500">one of</span>
+          )}
+          {item?.skills?.map((skill, i) =>
+            skill ? <Badge key={`${skill}-${i}`}>{skill}</Badge> : null,
+          )}
           {typeof item?.minYears === "number" && (
             <Badge>{item.minYears}+ yrs</Badge>
           )}

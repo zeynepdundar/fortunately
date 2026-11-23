@@ -56,7 +56,8 @@ CREATE TABLE "requirements" (
 	"text" text NOT NULL,
 	"kind" "requirement_kind" NOT NULL,
 	"category" "requirement_category" NOT NULL,
-	"skill" text,
+	"skills" text[] DEFAULT '{}' NOT NULL,
+	"any_of" boolean DEFAULT false NOT NULL,
 	"min_years" integer
 );
 --> statement-breakpoint
