@@ -2,21 +2,57 @@ import { Output, streamText, type LanguageModel } from "ai";
 import { Extraction } from "@/lib/schemas";
 
 /** Bump when the instructions change, so eval results stay comparable. */
-export const EXTRACTION_PROMPT_VERSION = "extract-v1";
+export const EXTRACTION_PROMPT_VERSION = "extract-v2";
 
 export const EXTRACTION_INSTRUCTIONS = `You extract the candidate requirements from a job posting.
+Return one entry per requirement, in the order of the posting. Never add anything the posting does not ask for.
 
-Rules:
-- Extract qualifications the candidate is expected to have. Skip company descriptions, benefits, salary and the team's day-to-day duties.
-- A technology mentioned only under responsibilities (not under requirements) counts as kind "nice".
-- kind is "must" for required items (Requirements, Must have, You have, What you bring) and "nice" for optional ones (Nice to have, Bonus, Should have, Preferred, a plus).
-- Split compound items: "React and TypeScript" becomes two requirements.
-- A choice between alternatives ("Vite, webpack or Turbopack") stays one requirement; use the first option as its skill.
-- text: the requirement as written in the posting, shortened to at most 12 words. Never invent wording.
-- category: technology, experience (years or seniority), domain (industry knowledge), education, soft_skill, or other (languages, location, travel).
-- skill: for technology items, a lowercase kebab-case slug of the technology ("react", "typescript", "next-js", "node-js", "github-actions"). null for everything else.
-- minYears: the number of years if the posting states one ("5+ years" -> 5), else null.
-- Keep the order of the posting. Do not add requirements that are not in the posting.`;
+WHAT TO INCLUDE
+- Qualifications the candidate should have: technologies, years of experience, education, spoken languages, domain knowledge, ways of working.
+- Skip the company description, benefits, salary and the team's duties. Exception: a technology named only in the duties is a "nice" requirement.
+
+KIND
+- "must": listed under Requirements, Must have, You have, What you bring, or phrased as required.
+- "nice": listed under Nice to have, Bonus, Should have, Preferred, or marked as "a plus".
+
+SPLITTING
+- Items joined by "and" or a comma become separate entries: "JavaScript and TypeScript" -> two entries.
+- Alternatives joined by "or", "such as" or "e.g." stay one entry.
+
+TEXT
+- Copy the posting's own words. Keep technology names and anything in parentheses.
+- You may drop filler like "Strong" or "Solid" at the start. Never paraphrase or summarise.
+- When you split an item, repeat the shared words in each entry ("5+ years of JavaScript", "5+ years of TypeScript").
+
+CATEGORY
+- technology: names a specific language, framework, library, tool or platform, also when years are attached ("4+ years of React Native").
+- experience: general experience without one named technology ("5+ years of frontend development", "experience building a design system").
+- domain: subject or industry knowledge (payments, accessibility, web performance).
+- education: degrees and certificates.
+- soft_skill: ownership, communication, collaboration.
+- other: spoken languages, location, travel, availability.
+
+SKILL
+- technology entries: a lowercase kebab-case slug of the technology ("react", "next-js", "node-js", "github-actions"). With alternatives, use the first one named ("TanStack Query or SWR" -> "tanstack-query").
+- every other category: null.
+
+MIN YEARS
+- The number of years if stated ("5+ years" -> 5), otherwise null. When you split an item, every entry keeps the years.
+
+EXAMPLES
+Posting lines:
+  Requirements
+  - 4+ years of Vue and Nuxt.
+  - A state library such as Pinia or Vuex.
+  - Experience leading a framework migration.
+  Nice to have
+  - Fluent Dutch.
+Entries:
+  {"text":"4+ years of Vue","kind":"must","category":"technology","skill":"vue","minYears":4}
+  {"text":"4+ years of Nuxt","kind":"must","category":"technology","skill":"nuxt","minYears":4}
+  {"text":"A state library such as Pinia or Vuex","kind":"must","category":"technology","skill":"pinia","minYears":null}
+  {"text":"Experience leading a framework migration","kind":"must","category":"experience","skill":null,"minYears":null}
+  {"text":"Fluent Dutch","kind":"nice","category":"other","skill":null,"minYears":null}`;
 
 /** qwen3's soft switch that skips its hidden reasoning step. */
 export const NO_THINK = "/no_think";
