@@ -27,4 +27,8 @@ test("Ollama needs no key", async ({ page }) => {
   await page.getByLabel("Ollama (local)").check();
   await expect(page.getByLabel("Model")).toHaveValue("qwen3:8b");
   await expect(page.getByRole("status")).toContainText("Ready to analyze");
+  await expect(page.getByLabel("Thinking mode")).not.toBeChecked();
+
+  await page.getByLabel("Model").fill("llama3.1:8b");
+  await expect(page.getByLabel("Thinking mode")).toHaveCount(0);
 });

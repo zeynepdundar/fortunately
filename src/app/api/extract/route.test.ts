@@ -27,6 +27,7 @@ vi.mock("@/lib/ai/extract", () => ({
 const { POST } = await import("./route");
 const { KEY_HEADER } = await import("@/lib/api/extract-contract");
 const { getModel } = await import("@/lib/ai/provider");
+const { streamExtraction } = await import("@/lib/ai/extract");
 
 function request(body: unknown, key?: string) {
   return new Request("http://localhost/api/extract", {
@@ -105,6 +106,32 @@ describe("POST /api/extract", () => {
     vi.unstubAllEnvs();
     expect(res.status).toBe(400);
     expect(await res.json()).toMatchObject({ error: "provider_disabled" });
+  });
+
+  it("disables thinking for qwen3 on Ollama unless asked", async () => {
+    await POST(request({ posting, provider: "ollama", modelId: "qwen3:8b" }));
+    expect(streamExtraction).toHaveBeenLastCalledWith(
+      expect.objectContaining({ disableThinking: true }),
+    );
+
+    await POST(
+      request({
+        posting,
+        provider: "ollama",
+        modelId: "qwen3:8b",
+        thinking: true,
+      }),
+    );
+    expect(streamExtraction).toHaveBeenLastCalledWith(
+      expect.objectContaining({ disableThinking: false }),
+    );
+
+    await POST(
+      request({ posting, provider: "ollama", modelId: "llama3.1:8b" }),
+    );
+    expect(streamExtraction).toHaveBeenLastCalledWith(
+      expect.objectContaining({ disableThinking: false }),
+    );
   });
 
   it("does not echo the key in error responses", async () => {

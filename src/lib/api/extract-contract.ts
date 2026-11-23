@@ -13,5 +13,7 @@ export const ExtractRequest = z.object({
     .max(30_000),
   provider: ProviderId,
   modelId: z.string().trim().min(1).max(100),
+  /** Let thinking models reason before answering. Off by default: slower, rarely needed here. */
+  thinking: z.boolean().default(false),
 });
-export type ExtractRequest = z.infer<typeof ExtractRequest>;
+export type ExtractRequest = z.input<typeof ExtractRequest>;

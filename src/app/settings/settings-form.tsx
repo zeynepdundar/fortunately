@@ -2,7 +2,11 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { DEFAULT_MODEL, MODEL_SUGGESTIONS } from "@/lib/ai/models";
+import {
+  DEFAULT_MODEL,
+  MODEL_SUGGESTIONS,
+  supportsThinkingToggle,
+} from "@/lib/ai/models";
 import { needsApiKey, ProviderId } from "@/lib/ai/provider-id";
 import { useHydrated } from "@/lib/use-hydrated";
 import { useSettings } from "@/stores/settings";
@@ -18,7 +22,7 @@ const inputClass =
 
 export function SettingsForm() {
   const hydrated = useHydrated();
-  const { provider, modelId, apiKey, set, clearKey } = useSettings();
+  const { provider, modelId, apiKey, thinking, set, clearKey } = useSettings();
   const [showKey, setShowKey] = useState(false);
 
   if (!hydrated) {
@@ -74,6 +78,24 @@ export function SettingsForm() {
           A small, fast model is enough for extraction and keeps costs low.
         </span>
       </label>
+
+      {supportsThinkingToggle(provider, modelId) && (
+        <label className="flex items-start gap-3 text-sm">
+          <input
+            type="checkbox"
+            className="mt-1"
+            checked={thinking}
+            onChange={(e) => set({ thinking: e.target.checked })}
+          />
+          <span>
+            <span className="font-medium">Thinking mode</span>
+            <span className="block text-xs text-neutral-500">
+              Lets the model reason before answering. Slower; off is usually
+              enough for extracting requirements.
+            </span>
+          </span>
+        </label>
+      )}
 
       {keyRequired ? (
         <label className="flex flex-col gap-1.5 text-sm">

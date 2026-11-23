@@ -1,6 +1,7 @@
 import { createTextStreamResponse, toTextStream } from "ai";
 import { z } from "zod";
 import { streamExtraction } from "@/lib/ai/extract";
+import { supportsThinkingToggle } from "@/lib/ai/models";
 import { getModel, isOllamaEnabled } from "@/lib/ai/provider";
 import { needsApiKey } from "@/lib/ai/provider-id";
 import { ExtractRequest, KEY_HEADER } from "@/lib/api/extract-contract";
@@ -18,7 +19,7 @@ export async function POST(req: Request) {
       { status: 400 },
     );
   }
-  const { posting, provider, modelId } = parsed.data;
+  const { posting, provider, modelId, thinking } = parsed.data;
 
   if (provider === "ollama" && !isOllamaEnabled()) {
     return Response.json(
@@ -41,6 +42,7 @@ export async function POST(req: Request) {
   const result = streamExtraction({
     model: getModel({ provider, modelId, apiKey }),
     posting,
+    disableThinking: supportsThinkingToggle(provider, modelId) && !thinking,
     abortSignal: req.signal,
   });
 

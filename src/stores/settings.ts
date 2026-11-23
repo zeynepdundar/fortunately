@@ -10,8 +10,12 @@ type SettingsState = {
   modelId: string;
   /** BYOK: kept in sessionStorage only, sent per request, never stored server-side. */
   apiKey: string;
+  /** Thinking mode for models that support switching it (e.g. qwen3). */
+  thinking: boolean;
   set: (
-    patch: Partial<Pick<SettingsState, "provider" | "modelId" | "apiKey">>,
+    patch: Partial<
+      Pick<SettingsState, "provider" | "modelId" | "apiKey" | "thinking">
+    >,
   ) => void;
   clearKey: () => void;
 };
@@ -22,6 +26,7 @@ export const useSettings = create<SettingsState>()(
       provider: "anthropic",
       modelId: DEFAULT_MODEL.anthropic,
       apiKey: "",
+      thinking: false,
       set: (patch) => set(patch),
       clearKey: () => set({ apiKey: "" }),
     }),

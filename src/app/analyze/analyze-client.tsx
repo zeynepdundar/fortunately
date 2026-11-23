@@ -35,7 +35,7 @@ export function AnalyzeClient({ samples }: { samples: SamplePosting[] }) {
 
   // Settings live in sessionStorage, so read them only after hydration.
   const hydrated = useHydrated();
-  const { provider, modelId, apiKey } = useSettings();
+  const { provider, modelId, apiKey, thinking } = useSettings();
   const configured =
     hydrated &&
     modelId.length > 0 &&
@@ -66,7 +66,12 @@ export function AnalyzeClient({ samples }: { samples: SamplePosting[] }) {
 
   function onSubmit(e: React.FormEvent) {
     e.preventDefault();
-    const parsed = ExtractRequest.safeParse({ posting, provider, modelId });
+    const parsed = ExtractRequest.safeParse({
+      posting,
+      provider,
+      modelId,
+      thinking,
+    });
     if (!parsed.success) {
       setInputError(parsed.error.issues[0]?.message ?? "Invalid input.");
       return;

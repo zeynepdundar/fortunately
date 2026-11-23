@@ -12,3 +12,14 @@ export const DEFAULT_MODEL: Record<ProviderId, string> = {
   openai: "",
   ollama: "qwen3:8b",
 };
+
+/**
+ * Models whose "thinking" can be switched off from the prompt.
+ * qwen3 honours a /no_think soft switch; other providers do not think by default.
+ */
+export function supportsThinkingToggle(
+  provider: ProviderId,
+  modelId: string,
+): boolean {
+  return provider === "ollama" && /^qwen3/i.test(modelId.trim());
+}

@@ -18,20 +18,34 @@ Rules:
 - minYears: the number of years if the posting states one ("5+ years" -> 5), else null.
 - Keep the order of the posting. Do not add requirements that are not in the posting.`;
 
+/** qwen3's soft switch that skips its hidden reasoning step. */
+export const NO_THINK = "/no_think";
+
 export function streamExtraction({
   model,
   posting,
+  disableThinking = false,
   abortSignal,
 }: {
   model: LanguageModel;
   posting: string;
+  /** Prefix the prompt with /no_think (only for models that support it). */
+  disableThinking?: boolean;
   abortSignal?: AbortSignal;
 }) {
+  const prefix = disableThinking ? `${NO_THINK}\n` : "";
   return streamText({
     model,
     instructions: EXTRACTION_INSTRUCTIONS,
-    prompt: `Job posting:\n<posting>\n${posting}\n</posting>`,
+    prompt: `${prefix}Job posting:\n<posting>\n${posting}\n</posting>`,
     output: Output.object({ schema: Extraction }),
     abortSignal,
+    // Log only the message: provider errors can carry request details.
+    onError: ({ error }) => {
+      console.error(
+        "[extract] stream error:",
+        error instanceof Error ? error.message : String(error),
+      );
+    },
   });
 }

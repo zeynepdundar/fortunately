@@ -92,4 +92,22 @@ describe("streamExtraction", () => {
     );
     expect(text).toContain("<posting>\\nPOSTING BODY\\n</posting>");
   });
+
+  it("prefixes /no_think only when thinking is disabled", async () => {
+    const off = mockModel(JSON.stringify({ requirements: [] }));
+    await streamExtraction({
+      model: off,
+      posting: "BODY",
+      disableThinking: true,
+    }).output;
+    expect(JSON.stringify(off.doStreamCalls[0].prompt)).toContain(
+      "/no_think\\nJob posting",
+    );
+
+    const on = mockModel(JSON.stringify({ requirements: [] }));
+    await streamExtraction({ model: on, posting: "BODY" }).output;
+    expect(JSON.stringify(on.doStreamCalls[0].prompt)).not.toContain(
+      "/no_think",
+    );
+  });
 });
