@@ -33,6 +33,7 @@ export function AnalyzeClient({ samples }: { samples: SamplePosting[] }) {
   const [inputError, setInputError] = useState<string | null>(null);
   const [firstItemMs, setFirstItemMs] = useState<number | null>(null);
   const startedAt = useRef<number | null>(null);
+  const [submittedPosting, setSubmittedPosting] = useState("");
 
   // Settings live in sessionStorage, so read them only after hydration.
   const hydrated = useHydrated();
@@ -52,8 +53,9 @@ export function AnalyzeClient({ samples }: { samples: SamplePosting[] }) {
   });
 
   const requirements = useMemo(
-    () => cleanPartialRequirements(object?.requirements ?? []),
-    [object],
+    () =>
+      cleanPartialRequirements(object?.requirements ?? [], submittedPosting),
+    [object, submittedPosting],
   );
   const mustCount = requirements.filter((r) => r?.kind === "must").length;
   const niceCount = requirements.filter((r) => r?.kind === "nice").length;
@@ -84,6 +86,7 @@ export function AnalyzeClient({ samples }: { samples: SamplePosting[] }) {
     setFirstItemMs(null);
     clear();
     startedAt.current = performance.now();
+    setSubmittedPosting(parsed.data.posting);
     submit(parsed.data);
   }
 

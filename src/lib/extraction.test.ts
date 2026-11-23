@@ -4,6 +4,7 @@ import {
   cleanExtraction,
   cleanPartialRequirements,
   cleanRequirement,
+  restoreCasing,
 } from "./extraction";
 
 const req = (overrides: Partial<Requirement>): Requirement => ({
@@ -57,6 +58,65 @@ describe("cleanRequirement", () => {
 
   it("trims text", () => {
     expect(cleanRequirement(req({ text: "  React  " })).text).toBe("React");
+  });
+});
+
+describe("alternatives, generic words and casing", () => {
+  it("marks a list with 'or' as alternatives", () => {
+    const r = cleanRequirement(
+      req({
+        text: "Build tools (Vite, webpack or Turbopack)",
+        skills: ["vite", "webpack", "turbopack"],
+        anyOf: false,
+      }),
+    );
+    expect(r.anyOf).toBe(true);
+  });
+
+  it("ignores version phrases like 'or later'", () => {
+    const r = cleanRequirement(
+      req({
+        text: "Angular (v17 or later) and TypeScript",
+        skills: ["angular", "typescript"],
+        anyOf: false,
+      }),
+    );
+    expect(r.anyOf).toBe(false);
+  });
+
+  it("keeps 'and' lists as all required", () => {
+    const r = cleanRequirement(
+      req({ text: "React and TypeScript", skills: ["react", "typescript"] }),
+    );
+    expect(r.anyOf).toBe(false);
+  });
+
+  it("drops generic words from skills", () => {
+    const r = cleanRequirement(req({ skills: ["nx", "pnpm", "workspaces"] }));
+    expect(r.skills).toEqual(["nx", "pnpm"]);
+  });
+
+  it("restores the posting's casing", () => {
+    const posting = "## Must have\n- Angular (v17 or later) and TypeScript.\n";
+    expect(
+      restoreCasing("angular (v17 or later) and typescript", posting),
+    ).toBe("Angular (v17 or later) and TypeScript");
+    expect(restoreCasing("not in the posting", posting)).toBe(
+      "not in the posting",
+    );
+  });
+
+  it("applies the posting's casing in cleanExtraction", () => {
+    const posting = "- Experience with Storybook.";
+    const { requirements } = cleanExtraction(
+      {
+        requirements: [
+          req({ text: "experience with storybook", skills: ["storybook"] }),
+        ],
+      },
+      posting,
+    );
+    expect(requirements[0].text).toBe("Experience with Storybook");
   });
 });
 
