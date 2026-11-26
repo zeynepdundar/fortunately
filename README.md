@@ -1,3 +1,5 @@
+<p align="center"><img src="public/logo.svg" width="96" height="96" alt="Fortunately logo: a wink and a checkmark"></p>
+
 # Fortunately
 
 > Turn every "Unfortunately" into a "Fortunately". AI job-fit copilot.

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { LogoMark } from "./logo";
 
 const LINKS = [
   { href: "/analyze", label: "Analyze" },
@@ -11,8 +12,12 @@ export function SiteHeader() {
   return (
     <header className="border-b border-neutral-200 dark:border-neutral-800">
       <nav className="mx-auto flex w-full max-w-6xl items-center gap-6 px-6 py-3 text-sm">
-        <Link href="/" className="font-semibold tracking-tight">
-          Fortunately
+        <Link
+          href="/"
+          className="flex items-center gap-2 font-semibold tracking-tight"
+        >
+          <LogoMark size={22} />
+          fortunately
         </Link>
         {LINKS.map((link) => (
           <Link
