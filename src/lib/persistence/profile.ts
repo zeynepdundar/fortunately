@@ -3,6 +3,10 @@ import { eq, sql } from "drizzle-orm";
 import { getDb } from "@/db";
 import { cvs, profiles } from "@/db/schema";
 import { toNumberedLines } from "@/lib/cv";
+import {
+  parseStoredCriteria,
+  type CriteriaConfig,
+} from "@/lib/criteria/config";
 import type { ProfileInput } from "@/lib/profile/schema";
 
 export type StoredProfile = {
@@ -84,5 +88,29 @@ export async function saveProfile(
     .onConflictDoUpdate({
       target: profiles.workspaceId,
       set: { ...values, updatedAt: sql`now()` },
+    });
+}
+
+/** The workspace's criteria, or the defaults when none were saved. */
+export async function getCriteria(workspaceId: string) {
+  const [row] = await getDb()
+    .select({ criteria: profiles.criteria })
+    .from(profiles)
+    .where(eq(profiles.workspaceId, workspaceId))
+    .limit(1);
+  return parseStoredCriteria(row?.criteria ?? null);
+}
+
+/** Save criteria; creates an empty profile row when the visitor has none yet. */
+export async function saveCriteria(
+  workspaceId: string,
+  criteria: CriteriaConfig,
+): Promise<void> {
+  await getDb()
+    .insert(profiles)
+    .values({ workspaceId, criteria })
+    .onConflictDoUpdate({
+      target: profiles.workspaceId,
+      set: { criteria, updatedAt: sql`now()` },
     });
 }

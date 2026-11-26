@@ -1,40 +1,23 @@
 import Link from "next/link";
-import { FactsBar } from "@/components/facts-bar";
 import type { ListedPosting } from "@/lib/criteria/postings-list";
 
-function Score({
-  score,
-  coverage,
-}: {
-  score: number | null;
-  coverage: number;
-}) {
-  return (
-    <div className="flex w-20 shrink-0 flex-col items-end">
-      <span
-        className="text-2xl font-semibold tabular-nums"
-        aria-label={score === null ? "Not scored" : `Score ${score}`}
-      >
-        {score === null ? "—" : score}
-      </span>
-      <span className="text-xs text-neutral-500 tabular-nums">
-        {score === null
-          ? "not scored"
-          : coverage < 1
-            ? `${Math.round(coverage * 100)}% known`
-            : "fit score"}
-      </span>
-    </div>
-  );
-}
+const WORK_MODE = {
+  remote: "Remote",
+  hybrid: "Hybrid",
+  onsite: "On-site",
+} as const;
+const PREFERENCE_MARK = { match: "✓", mismatch: "✗", unknown: "?" } as const;
 
-/** One posting in the list: facts, CV match summary, score and the reasons behind its section. */
+/** One posting in the list: facts, must-have count, preference badges and the reasons behind its section. */
 export function PostingCard({ posting }: { posting: ListedPosting }) {
-  const { analysis, evaluation, verdicts } = posting;
-  const unknownFilters = evaluation.filters.filter(
-    (f) => f.status === "unknown",
-  );
-  const failedFilters = evaluation.filters.filter((f) => f.status === "fail");
+  const { analysis, evaluation } = posting;
+  const { match } = evaluation;
+  const location = [analysis.city, analysis.country].filter(Boolean).join(", ");
+  const facts = [
+    analysis.company,
+    location || "Location not stated",
+    analysis.workMode ? WORK_MODE[analysis.workMode] : null,
+  ].filter(Boolean);
 
   return (
     <li
@@ -48,46 +31,66 @@ export function PostingCard({ posting }: { posting: ListedPosting }) {
         >
           {analysis.title}
         </Link>
-        <div className="mt-1">
-          <FactsBar
-            facts={{
-              company: analysis.company,
-              city: analysis.city,
-              country: analysis.country,
-              workMode: analysis.workMode,
-              relocation: analysis.relocation,
-            }}
-          />
-        </div>
+        <p className="mt-0.5 text-sm text-neutral-600 dark:text-neutral-400">
+          {facts.join(" · ")}
+        </p>
+
         <p className="mt-1.5 text-xs text-neutral-500 tabular-nums">
-          {verdicts.matched
-            ? `CV match: ${verdicts.met} met · ${verdicts.partial} partial · ${verdicts.missing} missing`
+          {match.matched
+            ? [
+                match.must.partial ? `${match.must.partial} partial` : null,
+                match.must.missing ? `${match.must.missing} missing` : null,
+                match.nice.total
+                  ? `nice-to-haves ${match.nice.met}/${match.nice.total}`
+                  : null,
+                match.yearsDetail,
+              ]
+                .filter(Boolean)
+                .join(" · ") || "Every must-have is proven by your CV"
             : "Not matched against a CV"}
         </p>
-        {(unknownFilters.length > 0 ||
-          evaluation.belowThreshold.length > 0 ||
-          failedFilters.length > 0) && (
-          <ul className="mt-1.5 flex flex-col gap-0.5 text-xs">
-            {failedFilters.map((f) => (
-              <li key={f.id} className="text-rose-700 dark:text-rose-400">
-                Filtered: {f.reason}
-              </li>
-            ))}
-            {evaluation.belowThreshold.map((reason) => (
-              <li key={reason} className="text-amber-800 dark:text-amber-300">
-                Below threshold: {reason}
-              </li>
-            ))}
-            {unknownFilters.map((f) => (
-              <li key={f.id} className="text-amber-800 dark:text-amber-300">
-                <span aria-hidden>⚠ </span>
-                {f.reason}
+
+        {evaluation.preferences.length > 0 && (
+          <ul
+            className="mt-2 flex flex-wrap gap-1.5"
+            aria-label="Your preferences"
+          >
+            {evaluation.preferences.map((p) => (
+              <li
+                key={p.id}
+                className="rounded-md px-1.5 py-0.5 text-xs text-neutral-700 ring-1 ring-neutral-300 ring-inset dark:text-neutral-300 dark:ring-neutral-700"
+              >
+                <span aria-hidden>{PREFERENCE_MARK[p.status]} </span>
+                {p.label}
               </li>
             ))}
           </ul>
         )}
+
+        {evaluation.belowThreshold.length > 0 && (
+          <ul className="mt-1.5 flex flex-col gap-0.5 text-xs text-neutral-600 dark:text-neutral-400">
+            {evaluation.belowThreshold.map((reason) => (
+              <li key={reason}>Below threshold: {reason}</li>
+            ))}
+          </ul>
+        )}
       </div>
-      <Score score={evaluation.score} coverage={evaluation.coverage} />
+
+      <div className="flex w-24 shrink-0 flex-col items-end">
+        {match.matched ? (
+          <>
+            <span className="text-2xl font-semibold tabular-nums">
+              {match.must.met}/{match.must.total}
+            </span>
+            <span className="text-xs text-neutral-500">must-haves met</span>
+          </>
+        ) : (
+          <>
+            <span className="text-2xl font-semibold">—</span>
+            <span className="text-xs text-neutral-500">not matched</span>
+          </>
+        )}
+      </div>
     </li>
   );
 }

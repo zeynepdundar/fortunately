@@ -67,9 +67,9 @@ describe("buildPostingList", () => {
 
   it("puts postings under a threshold in belowThreshold", () => {
     const list = buildPostingList(
-      [analysis("weak", { matches: [{ verdict: "partial" }] })],
+      [analysis("weak", { matches: [{ verdict: "missing" }] })],
       profile,
-      { ...DEFAULT_CRITERIA, thresholds: { technology: 0.6, total: null } },
+      { ...DEFAULT_CRITERIA, allowedMissingMust: 0 },
     );
     expect(list.belowThreshold.map((p) => p.analysis.analysisId)).toEqual([
       "weak",
@@ -83,6 +83,6 @@ describe("buildPostingList", () => {
       DEFAULT_CRITERIA,
     );
     expect(list.shown[0].verdicts.matched).toBe(false);
-    expect(list.shown[0].evaluation.score).toBeNull();
+    expect(list.shown[0].evaluation.match.matched).toBe(false);
   });
 });

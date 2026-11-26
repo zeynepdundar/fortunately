@@ -11,7 +11,7 @@ import {
   type ListedPosting,
 } from "@/lib/criteria/postings-list";
 import { listLatestAnalyses } from "@/lib/persistence/postings";
-import { getProfile } from "@/lib/persistence/profile";
+import { getCriteria, getProfile } from "@/lib/persistence/profile";
 import { readWorkspaceId } from "@/lib/persistence/workspace";
 
 export const metadata: Metadata = { title: "Postings — Fortunately" };
@@ -22,8 +22,8 @@ export default function PostingsPage() {
       <div>
         <h1 className="text-2xl font-semibold tracking-tight">Postings</h1>
         <p className="mt-1 text-sm text-neutral-500">
-          Every posting you analysed, ranked by how well it fits your profile
-          and criteria.
+          Every posting you analysed, ranked by how many must-haves your CV
+          proves.
         </p>
       </div>
       <Suspense
@@ -81,12 +81,13 @@ async function PostingsLoader() {
   }
 
   const workspaceId = await readWorkspaceId();
-  const [analyses, profile] = workspaceId
+  const [analyses, profile, criteria] = workspaceId
     ? await Promise.all([
         listLatestAnalyses(workspaceId),
         getProfile(workspaceId),
+        getCriteria(workspaceId),
       ])
-    : [[], null];
+    : [[], null, null];
 
   if (analyses.length === 0) {
     return (
@@ -110,20 +111,31 @@ async function PostingsLoader() {
         relocationNeeded: profile.relocationNeeded,
       }
     : EMPTY_PROFILE;
-  const list = buildPostingList(analyses, engineProfile, DEFAULT_CRITERIA);
+  const list = buildPostingList(
+    analyses,
+    engineProfile,
+    criteria?.config ?? DEFAULT_CRITERIA,
+  );
 
   return (
     <div className="flex flex-col gap-5">
       <p className="text-xs text-neutral-500">
         {list.shown.length} shown · {list.belowThreshold.length} below threshold
-        · {list.filteredOut.length} filtered out · scored with the default
-        criteria.{" "}
+        · {list.filteredOut.length} filtered out · using{" "}
+        {criteria && !criteria.isDefault
+          ? "your preferences"
+          : "the default preferences"}{" "}
+        ·{" "}
+        <Link href="/profile/preferences" className="underline">
+          Adjust
+        </Link>
+        .{" "}
         {!profile && (
           <>
             <Link href="/profile" className="underline">
               Fill in your profile
             </Link>{" "}
-            to score years, countries and relocation.
+            to check years, countries and relocation.
           </>
         )}
       </p>

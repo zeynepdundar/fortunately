@@ -1,56 +1,55 @@
 import { z } from "zod";
 
-const importance = z.number().int().min(0).max(10);
-const unknownHandling = z.enum(["show-flagged", "hide"]);
-const fraction = z.number().min(0).max(1);
+const preference = z.object({
+  /** Hide postings that clearly do not meet this preference. */
+  hideMismatches: z.boolean(),
+  /** Hide postings that do not state it (otherwise they are shown with a flag). */
+  hideUnknown: z.boolean(),
+});
+
+export const WorkModeId = z.enum(["remote", "hybrid", "onsite"]);
 
 /**
- * A user's criteria set. Everything here is applied in code after extraction,
- * so changing it re-ranks postings instantly without calling a model.
- * Exported and imported as JSON templates.
+ * A user's criteria. The MVP ranks by facts (must-haves met), not by a weighted score:
+ * users set how many missing must-haves they accept and their own preferences.
+ * Applied in code after extraction, so changes re-rank postings instantly.
  */
 export const CriteriaConfig = z.object({
-  version: z.literal(1),
-  /** Importance 0–10 per criterion; normalised to percentages. 0 leaves the criterion out. */
-  weights: z.object({
-    technology: importance,
-    years: importance,
-    relocation: importance,
-    country: importance,
-  }),
-  filters: z.object({
-    /** Hide postings that rule relocation out (only when the profile needs relocation). */
-    relocation: z.object({ enabled: z.boolean(), unknown: unknownHandling }),
-    /** Hide postings outside the profile's target countries (only when targets are set). */
-    country: z.object({ enabled: z.boolean(), unknown: unknownHandling }),
-    /** Hide postings that ask for more than (your years + value). */
-    yearsAbove: z.object({
-      enabled: z.boolean(),
-      value: z.number().int().min(0).max(30),
-    }),
-  }),
-  /** Optional minimums, as fractions 0–1. Postings below move to "Below threshold". */
-  thresholds: z.object({
-    technology: fraction.nullable(),
-    total: fraction.nullable(),
-  }),
-  technology: z.object({
-    /** How much a nice-to-have counts compared with a must-have. */
-    niceFactor: fraction,
-    /** Points for a Partial match (Met = 1, Missing = 0). */
-    partialValue: fraction,
+  version: z.literal(3),
+  /** More missing must-haves than this moves a posting to "Below threshold". */
+  allowedMissingMust: z.number().int().min(0).max(3),
+  preferences: z.object({
+    /** Only applies when the profile says relocation is needed. */
+    relocation: preference,
+    /** Only applies when the profile has target countries. */
+    country: preference,
+    /** Accepted work modes; all three means any. */
+    workMode: preference.extend({ accepted: z.array(WorkModeId).min(1) }),
   }),
 });
 export type CriteriaConfig = z.infer<typeof CriteriaConfig>;
 
 export const DEFAULT_CRITERIA: CriteriaConfig = {
-  version: 1,
-  weights: { technology: 10, years: 4, relocation: 3, country: 3 },
-  filters: {
-    relocation: { enabled: true, unknown: "show-flagged" },
-    country: { enabled: true, unknown: "show-flagged" },
-    yearsAbove: { enabled: false, value: 3 },
+  version: 3,
+  allowedMissingMust: 1,
+  preferences: {
+    relocation: { hideMismatches: true, hideUnknown: false },
+    country: { hideMismatches: true, hideUnknown: false },
+    workMode: {
+      accepted: ["remote", "hybrid", "onsite"],
+      hideMismatches: true,
+      hideUnknown: false,
+    },
   },
-  thresholds: { technology: null, total: null },
-  technology: { niceFactor: 0.3, partialValue: 0.5 },
 };
+
+/** Read criteria stored as JSON; anything missing, old or invalid falls back to the defaults. */
+export function parseStoredCriteria(value: unknown): {
+  config: CriteriaConfig;
+  isDefault: boolean;
+} {
+  const parsed = CriteriaConfig.safeParse(value);
+  return parsed.success
+    ? { config: parsed.data, isDefault: false }
+    : { config: DEFAULT_CRITERIA, isDefault: true };
+}

@@ -1,4 +1,4 @@
-import type { CheckedMatch, PostingFacts } from "@/lib/schemas";
+import type { CheckedMatch, PostingFacts, Requirement } from "@/lib/schemas";
 import type { CriteriaConfig } from "./config";
 import {
   compareEvaluations,
@@ -18,7 +18,8 @@ export type ListedAnalysis = {
   workMode: PostingFacts["workMode"];
   relocation: PostingFacts["relocation"];
   createdAt: Date;
-  requirements: PostingInput["requirements"];
+  requirements: (PostingInput["requirements"][number] &
+    Pick<Requirement, "category" | "skills">)[];
   matches: (Pick<CheckedMatch, "verdict"> | undefined)[];
 };
 
@@ -56,6 +57,7 @@ export function buildPostingList(
             facts: {
               country: analysis.country,
               relocation: analysis.relocation,
+              workMode: analysis.workMode,
             },
             requirements: analysis.requirements,
             matches: analysis.matches,

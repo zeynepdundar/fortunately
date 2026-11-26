@@ -1,260 +1,235 @@
 import { describe, expect, it } from "vitest";
-import { CriteriaConfig, DEFAULT_CRITERIA } from "./config";
+import { DEFAULT_CRITERIA, type CriteriaConfig } from "./config";
 import {
   compareEvaluations,
+  computeMatch,
   evaluatePosting,
+  evaluatePreferences,
   requiredYears,
   type PostingInput,
   type Profile,
 } from "./engine";
 
+type Verdict = "met" | "partial" | "missing";
 const profile: Profile = {
   yearsOfExperience: 7,
   targetCountries: ["DE", "NL"],
   relocationNeeded: true,
 };
 
-const tech = (kind: "must" | "nice", minYears: number | null = null) => ({
-  kind,
-  category: "technology" as const,
-  skills: ["react"],
-  minYears,
-});
-
-/** 10 must-have technology requirements, 9 met and 1 missing, asking 8 years: technology 0.9. */
-const posting = (overrides: Partial<PostingInput> = {}): PostingInput => ({
-  facts: { country: "DE", relocation: "no" },
-  requirements: [
-    tech("must", 8),
-    ...Array.from({ length: 9 }, () => tech("must")),
-  ],
-  matches: [
-    ...Array.from({ length: 9 }, () => ({ verdict: "met" as const })),
-    { verdict: "missing" as const },
-  ],
-  ...overrides,
-});
+/** Build a posting from must and nice verdict lists. */
+function posting(
+  must: Verdict[],
+  nice: Verdict[] = [],
+  options: { minYears?: number; facts?: Partial<PostingInput["facts"]> } = {},
+): PostingInput {
+  return {
+    facts: {
+      country: "DE",
+      relocation: "yes",
+      workMode: "hybrid",
+      ...options.facts,
+    },
+    requirements: [
+      ...must.map((_, i) => ({
+        kind: "must" as const,
+        minYears: i === 0 ? (options.minYears ?? null) : null,
+      })),
+      ...nice.map(() => ({ kind: "nice" as const, minYears: null })),
+    ],
+    matches: [...must, ...nice].map((verdict) => ({ verdict })),
+  };
+}
 
 const config = (overrides: Partial<CriteriaConfig> = {}): CriteriaConfig => ({
   ...DEFAULT_CRITERIA,
   ...overrides,
 });
-const noFilters = config({
-  filters: {
-    relocation: { enabled: false, unknown: "show-flagged" },
-    country: { enabled: false, unknown: "show-flagged" },
-    yearsAbove: { enabled: false, value: 3 },
-  },
-});
 
-describe("score", () => {
-  it("matches the worked example: 10/4/3/3 gives 75", () => {
-    // (10 × 0.9 + 4 × 0.75 + 3 × 0 + 3 × 1) / 20 = 0.75
-    const result = evaluatePosting(posting(), profile, noFilters);
-    expect(result.score).toBe(75);
-    expect(result.coverage).toBe(1);
-  });
-
-  it("rises when technology matters more: 10/2/1/1 gives 82", () => {
-    const result = evaluatePosting(
-      posting(),
+describe("computeMatch", () => {
+  it("counts verdicts for must-haves and nice-to-haves", () => {
+    const m = computeMatch(
+      posting(["met", "partial", "missing"], ["met"]),
       profile,
-      config({
-        ...noFilters,
-        weights: { technology: 10, years: 2, relocation: 1, country: 1 },
-      }),
     );
-    expect(result.score).toBe(82);
+    expect(m.must).toEqual({ met: 1, partial: 1, missing: 1, total: 3 });
+    expect(m.nice).toEqual({ met: 1, partial: 0, missing: 0, total: 1 });
+    expect(m.matched).toBe(true);
   });
 
-  it("leaves unknown criteria out and reports coverage", () => {
-    const result = evaluatePosting(
-      posting({ facts: { country: null, relocation: "not_stated" } }),
-      profile,
-      noFilters,
-    );
-    // only technology (10) and years (4) are known: (9 + 3) / 14
-    expect(result.score).toBe(86);
-    expect(result.coverage).toBe(14 / 20);
-  });
-
-  it("skips relocation when the profile does not need it", () => {
-    const result = evaluatePosting(
-      posting(),
-      { ...profile, relocationNeeded: false },
-      noFilters,
-    );
+  it("keeps a hidden calibration score: must-haves 85%, nice-to-haves 15%", () => {
+    // must: (1 + 0.5) / 2 = 0.75, nice: 1 -> 0.85 × 0.75 + 0.15 × 1 = 0.7875
     expect(
-      result.criteria.find((c) => c.id === "relocation")?.points,
-    ).toBeNull();
+      computeMatch(posting(["met", "partial"], ["met"]), profile).hiddenScore,
+    ).toBe(79);
   });
 
-  it("counts partial matches and weights nice-to-haves lower", () => {
-    const result = evaluatePosting(
-      posting({
-        requirements: [tech("must"), tech("nice")],
-        matches: [{ verdict: "partial" }, { verdict: "met" }],
-      }),
-      profile,
-      config({
-        ...noFilters,
-        weights: { technology: 10, years: 0, relocation: 0, country: 0 },
-      }),
-    );
-    // (1 × 0.5 + 0.3 × 1) / 1.3
-    expect(result.score).toBe(62);
+  it("describes the years and lowers the hidden score when short", () => {
+    const m = computeMatch(posting(["met"], [], { minYears: 9 }), profile);
+    expect(m.yearsDetail).toBe("Asks 9+ years, you have 7");
+    expect(m.hiddenScore).toBe(70);
   });
 
-  it("has no score when nothing is known", () => {
-    const result = evaluatePosting(
-      posting({
-        requirements: [],
-        matches: [],
-        facts: { country: null, relocation: "not_stated" },
-      }),
-      profile,
-      noFilters,
-    );
-    expect(result.score).toBeNull();
-    expect(result.coverage).toBe(0);
-  });
-
-  it("ignores criteria with importance 0", () => {
-    const result = evaluatePosting(
-      posting(),
-      profile,
-      config({
-        ...noFilters,
-        weights: { technology: 10, years: 0, relocation: 0, country: 0 },
-      }),
-    );
-    expect(result.score).toBe(90);
+  it("is unmatched without CV matches", () => {
+    const m = computeMatch({ ...posting(["met"]), matches: [] }, profile);
+    expect(m.matched).toBe(false);
+    expect(m.hiddenScore).toBeNull();
   });
 });
 
-describe("filters", () => {
-  it("filters out a posting that rules relocation out", () => {
-    expect(evaluatePosting(posting(), profile, DEFAULT_CRITERIA).bucket).toBe(
-      "filtered_out",
-    );
+describe("evaluatePreferences", () => {
+  const prefs = DEFAULT_CRITERIA.preferences;
+
+  it("hides a posting that rules relocation out, flags one that does not say", () => {
+    expect(
+      evaluatePreferences(
+        { country: "DE", relocation: "no", workMode: null },
+        profile,
+        prefs,
+      )[0],
+    ).toMatchObject({
+      id: "relocation",
+      status: "mismatch",
+      hidden: true,
+    });
+    expect(
+      evaluatePreferences(
+        { country: "DE", relocation: "not_stated", workMode: null },
+        profile,
+        prefs,
+      )[0],
+    ).toMatchObject({ status: "unknown", hidden: false });
   });
 
-  it("flags but shows a posting with relocation not stated", () => {
-    const result = evaluatePosting(
-      posting({ facts: { country: "DE", relocation: "not_stated" } }),
-      profile,
-      DEFAULT_CRITERIA,
-    );
-    expect(result.bucket).toBe("shown");
-    expect(result.flagged).toBe(true);
+  it("skips relocation and country when the profile does not ask for them", () => {
+    const none: Profile = {
+      yearsOfExperience: null,
+      targetCountries: [],
+      relocationNeeded: false,
+    };
+    expect(
+      evaluatePreferences(
+        { country: "US", relocation: "no", workMode: "onsite" },
+        none,
+        prefs,
+      ),
+    ).toEqual([]);
   });
 
-  it("hides unknowns when set to hide", () => {
-    const result = evaluatePosting(
-      posting({ facts: { country: "DE", relocation: "not_stated" } }),
-      profile,
-      config({
-        filters: {
-          ...DEFAULT_CRITERIA.filters,
-          relocation: { enabled: true, unknown: "hide" },
-        },
-      }),
-    );
-    expect(result.bucket).toBe("filtered_out");
-  });
-
-  it("filters out countries outside the targets", () => {
-    const result = evaluatePosting(
-      posting({ facts: { country: "US", relocation: "yes" } }),
-      profile,
-      DEFAULT_CRITERIA,
-    );
-    expect(result.filters.find((f) => f.id === "country")?.status).toBe("fail");
-    expect(result.bucket).toBe("filtered_out");
-  });
-
-  it("filters out postings asking far more years when enabled", () => {
-    const result = evaluatePosting(
-      posting({
-        facts: { country: "DE", relocation: "yes" },
-        requirements: [tech("must", 12)],
-        matches: [{ verdict: "met" }],
-      }),
-      profile,
-      config({
-        filters: {
-          ...DEFAULT_CRITERIA.filters,
-          yearsAbove: { enabled: true, value: 3 },
-        },
-      }),
-    );
-    expect(result.filters.find((f) => f.id === "yearsAbove")).toMatchObject({
-      status: "fail",
+  it("checks accepted work modes when not all are accepted", () => {
+    const remoteOnly = {
+      ...prefs,
+      workMode: { ...prefs.workMode, accepted: ["remote" as const] },
+    };
+    expect(
+      evaluatePreferences(
+        { country: "DE", relocation: "yes", workMode: "onsite" },
+        profile,
+        remoteOnly,
+      ).find((p) => p.id === "workMode"),
+    ).toMatchObject({
+      status: "mismatch",
+      label: "On-site is not accepted",
+      hidden: true,
     });
   });
-
-  it("does not apply the relocation filter when the profile does not need relocation", () => {
-    const result = evaluatePosting(
-      posting(),
-      { ...profile, relocationNeeded: false },
-      DEFAULT_CRITERIA,
-    );
-    expect(result.bucket).toBe("shown");
-  });
 });
 
-describe("thresholds", () => {
-  it("moves a posting below the technology minimum to below_threshold", () => {
+describe("evaluatePosting", () => {
+  it("shows a good fit", () => {
+    expect(
+      evaluatePosting(posting(["met", "met"]), profile, config()).bucket,
+    ).toBe("shown");
+  });
+
+  it("moves postings with too many missing must-haves below the threshold", () => {
     const result = evaluatePosting(
-      posting({ facts: { country: "DE", relocation: "yes" } }),
+      posting(["met", "missing", "missing"]),
       profile,
-      config({ thresholds: { technology: 0.95, total: null } }),
+      config(),
     );
     expect(result.bucket).toBe("below_threshold");
-    expect(result.belowThreshold).toEqual(["Technology 90%, minimum 95%"]);
+    expect(result.belowThreshold).toEqual([
+      "2 must-haves missing (you allow 1)",
+    ]);
+    expect(
+      evaluatePosting(
+        posting(["met", "missing", "missing"]),
+        profile,
+        config({ allowedMissingMust: 2 }),
+      ).bucket,
+    ).toBe("shown");
   });
-});
 
-describe("ordering", () => {
-  it("sorts shown before below threshold before filtered out, then by score", () => {
-    const shownHigh = evaluatePosting(
-      posting({ facts: { country: "DE", relocation: "yes" } }),
+  it("filters out a posting that misses a hidden preference", () => {
+    expect(
+      evaluatePosting(
+        posting(["met"], [], { facts: { country: "US" } }),
+        profile,
+        config(),
+      ).bucket,
+    ).toBe("filtered_out");
+  });
+
+  it("orders by section, then fewer missing must-haves, then share of must-haves met, then nice-to-haves", () => {
+    const allMet = evaluatePosting(posting(["met", "met"]), profile, config());
+    const allMetMoreNice = evaluatePosting(
+      posting(["met", "met"], ["met"]),
       profile,
-      DEFAULT_CRITERIA,
+      config(),
     );
-    const filtered = evaluatePosting(posting(), profile, DEFAULT_CRITERIA);
-    const shownLow = evaluatePosting(
-      posting({
-        facts: { country: "DE", relocation: "yes" },
-        matches: Array.from({ length: 10 }, () => ({
-          verdict: "missing" as const,
-        })),
-      }),
+    const onePartial = evaluatePosting(
+      posting(["met", "partial"]),
       profile,
-      DEFAULT_CRITERIA,
+      config(),
     );
-    const sorted = [filtered, shownLow, shownHigh].sort(compareEvaluations);
-    expect(sorted).toEqual([shownHigh, shownLow, filtered]);
+    const oneMissing = evaluatePosting(
+      posting(["met", "met", "missing"]),
+      profile,
+      config(),
+    );
+    const below = evaluatePosting(
+      posting(["missing", "missing"]),
+      profile,
+      config(),
+    );
+    const out = evaluatePosting(
+      posting(["met"], [], { facts: { relocation: "no" } }),
+      profile,
+      config(),
+    );
+    const unmatched = evaluatePosting(
+      { ...posting(["met"]), matches: [] },
+      profile,
+      config(),
+    );
+    expect(
+      [
+        out,
+        below,
+        unmatched,
+        oneMissing,
+        onePartial,
+        allMet,
+        allMetMoreNice,
+      ].sort(compareEvaluations),
+    ).toEqual([
+      allMetMoreNice,
+      allMet,
+      onePartial,
+      oneMissing,
+      unmatched,
+      below,
+      out,
+    ]);
   });
 });
 
 describe("requiredYears", () => {
   it("takes the highest stated minimum", () => {
     expect(
-      requiredYears([tech("must", 3), tech("must", 5), tech("must")]),
+      requiredYears([{ minYears: 3 }, { minYears: 5 }, { minYears: null }]),
     ).toBe(5);
-    expect(requiredYears([tech("must")])).toBeNull();
-  });
-});
-
-describe("CriteriaConfig", () => {
-  it("accepts the defaults and rejects an out-of-range weight", () => {
-    expect(CriteriaConfig.safeParse(DEFAULT_CRITERIA).success).toBe(true);
-    expect(
-      CriteriaConfig.safeParse({
-        ...DEFAULT_CRITERIA,
-        weights: { ...DEFAULT_CRITERIA.weights, technology: 11 },
-      }).success,
-    ).toBe(false);
+    expect(requiredYears([{ minYears: null }])).toBeNull();
   });
 });

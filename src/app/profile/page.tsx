@@ -11,22 +11,13 @@ export const metadata: Metadata = { title: "Profile — Fortunately" };
 
 export default function ProfilePage() {
   return (
-    <main className="mx-auto flex w-full max-w-2xl flex-1 flex-col gap-6 px-6 py-10">
-      <div>
-        <h1 className="text-2xl font-semibold tracking-tight">Profile</h1>
-        <p className="mt-1 text-sm text-neutral-500">
-          Postings are filtered and scored against this. Your CV is used to find
-          evidence for each requirement.
-        </p>
-      </div>
-      <Suspense
-        fallback={
-          <div className="h-96 animate-pulse rounded-lg bg-neutral-100 dark:bg-neutral-900" />
-        }
-      >
-        <ProfileLoader />
-      </Suspense>
-    </main>
+    <Suspense
+      fallback={
+        <div className="h-96 animate-pulse rounded-lg bg-neutral-100 dark:bg-neutral-900" />
+      }
+    >
+      <ProfileLoader />
+    </Suspense>
   );
 }
 

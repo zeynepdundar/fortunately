@@ -162,6 +162,8 @@ export const profiles = pgTable("profiles", {
   activeCvId: uuid("active_cv_id").references(() => cvs.id, {
     onDelete: "set null",
   }),
+  /** The user's CriteriaConfig as JSON; null means the defaults. */
+  criteria: jsonb("criteria"),
   updatedAt: timestamp("updated_at", { withTimezone: true })
     .notNull()
     .defaultNow(),
