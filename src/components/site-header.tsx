@@ -1,5 +1,12 @@
 import Link from "next/link";
 
+const LINKS = [
+  { href: "/analyze", label: "Analyze" },
+  { href: "/postings", label: "Postings" },
+  { href: "/profile", label: "Profile" },
+  { href: "/settings", label: "Settings" },
+] as const;
+
 export function SiteHeader() {
   return (
     <header className="border-b border-neutral-200 dark:border-neutral-800">
@@ -7,24 +14,15 @@ export function SiteHeader() {
         <Link href="/" className="font-semibold tracking-tight">
           Fortunately
         </Link>
-        <Link
-          href="/analyze"
-          className="text-neutral-600 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-white"
-        >
-          Analyze
-        </Link>
-        <Link
-          href="/profile"
-          className="text-neutral-600 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-white"
-        >
-          Profile
-        </Link>
-        <Link
-          href="/settings"
-          className="text-neutral-600 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-white"
-        >
-          Settings
-        </Link>
+        {LINKS.map((link) => (
+          <Link
+            key={link.href}
+            href={link.href}
+            className="text-neutral-600 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-white"
+          >
+            {link.label}
+          </Link>
+        ))}
       </nav>
     </header>
   );
