@@ -5,6 +5,7 @@ import { Suspense } from "react";
 import { FactsBar } from "@/components/facts-bar";
 import { RequirementRow } from "@/components/requirement-row";
 import { getAnalysis } from "@/lib/persistence/analyses";
+import { countVerdicts } from "@/lib/stored-matches";
 import { readWorkspaceId } from "@/lib/persistence/workspace";
 
 export const metadata: Metadata = { title: "Analysis — Fortunately" };
@@ -33,6 +34,8 @@ async function AnalysisView({ params }: { params: Promise<{ id: string }> }) {
   const analysis = await getAnalysis(id, workspaceId);
   if (!analysis) notFound();
 
+  const verdicts = countVerdicts(analysis.matches);
+  const matched = analysis.matches.some(Boolean);
   const must = analysis.requirements.filter((r) => r.kind === "must").length;
   const nice = analysis.requirements.length - must;
   const date = new Intl.DateTimeFormat("en-GB", {
@@ -99,15 +102,34 @@ async function AnalysisView({ params }: { params: Promise<{ id: string }> }) {
             </h2>
             <p className="text-xs text-neutral-500 tabular-nums">
               {must} must · {nice} nice
+              {matched &&
+                ` · CV match: ${verdicts.met} met · ${verdicts.partial} partial · ${verdicts.missing} missing`}
             </p>
           </div>
           <ol className="rounded-lg border border-neutral-200 px-3 dark:border-neutral-800">
             {analysis.requirements.map((item, i) => (
-              <RequirementRow key={i} index={i} item={item} />
+              <RequirementRow
+                key={i}
+                index={i}
+                item={item}
+                match={analysis.matches[i]}
+              />
             ))}
           </ol>
         </section>
       )}
+
+      {analysis.status === "done" &&
+        analysis.requirements.length > 0 &&
+        !matched && (
+          <p className="text-sm text-neutral-500">
+            Not matched against a CV yet. Add your CV in{" "}
+            <Link href="/profile" className="font-medium underline">
+              Profile
+            </Link>
+            , then analyze the posting again.
+          </p>
+        )}
 
       <details className="rounded-lg border border-neutral-200 p-3 text-sm dark:border-neutral-800">
         <summary className="cursor-pointer font-medium">

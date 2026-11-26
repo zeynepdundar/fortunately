@@ -1,8 +1,9 @@
 import "server-only";
-import { and, asc, eq } from "drizzle-orm";
+import { and, asc, eq, inArray } from "drizzle-orm";
 import { getDb } from "@/db";
-import { analyses, postings, requirements } from "@/db/schema";
+import { analyses, cvs, matches, postings, requirements } from "@/db/schema";
 import type { PostingFacts, Requirement } from "@/lib/schemas";
+import { rebuildMatches } from "@/lib/stored-matches";
 import { postingHash, postingTitle } from "./posting-meta";
 
 /** Create (or reuse) the posting and open a running analysis. Returns the analysis id. */
@@ -130,6 +131,7 @@ export async function getAnalysis(analysisId: string, workspaceId: string) {
       relocation: analyses.relocation,
       postingTitle: postings.title,
       postingText: postings.rawText,
+      cvId: analyses.cvId,
     })
     .from(analyses)
     .innerJoin(postings, eq(analyses.postingId, postings.id))
@@ -141,6 +143,7 @@ export async function getAnalysis(analysisId: string, workspaceId: string) {
 
   const items = await db
     .select({
+      id: requirements.id,
       text: requirements.text,
       kind: requirements.kind,
       category: requirements.category,
@@ -152,5 +155,41 @@ export async function getAnalysis(analysisId: string, workspaceId: string) {
     .where(eq(requirements.analysisId, analysisId))
     .orderBy(asc(requirements.position));
 
-  return { ...row, requirements: items };
+  const requirementIds = items.map((r) => r.id);
+  const matchRows =
+    requirementIds.length > 0
+      ? await db
+          .select({
+            requirementId: matches.requirementId,
+            verdict: matches.verdict,
+            evidenceLines: matches.evidenceLines,
+            rationale: matches.rationale,
+            verified: matches.verified,
+          })
+          .from(matches)
+          .where(inArray(matches.requirementId, requirementIds))
+      : [];
+  const [cv] = row.cvId
+    ? await db
+        .select({ lines: cvs.lines })
+        .from(cvs)
+        .where(eq(cvs.id, row.cvId))
+        .limit(1)
+    : [];
+
+  return {
+    ...row,
+    requirements: items.map((r) => ({
+      text: r.text,
+      kind: r.kind,
+      category: r.category,
+      skills: r.skills,
+      anyOf: r.anyOf,
+      minYears: r.minYears,
+    })),
+    matches:
+      matchRows.length > 0
+        ? rebuildMatches(requirementIds, matchRows, cv?.lines ?? [])
+        : [],
+  };
 }
