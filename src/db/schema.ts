@@ -31,6 +31,12 @@ export const analysisStatus = pgEnum("analysis_status", [
   "error",
 ]);
 export const spanType = pgEnum("span_type", ["step", "llm", "tool"]);
+export const workMode = pgEnum("work_mode", ["remote", "hybrid", "onsite"]);
+export const relocationSupport = pgEnum("relocation_support", [
+  "yes",
+  "no",
+  "not_stated",
+]);
 
 /** Anonymous visitor, identified by a random id in an httpOnly cookie. */
 export const workspaces = pgTable("workspaces", {
@@ -85,6 +91,13 @@ export const analyses = pgTable("analyses", {
     .notNull()
     .default("0"),
   latencyMs: integer("latency_ms"),
+  /** Facts extracted from the posting by this analysis. */
+  jobTitle: text("job_title"),
+  company: text("company"),
+  country: text("country"),
+  city: text("city"),
+  workMode: workMode("work_mode"),
+  relocation: relocationSupport("relocation"),
   createdAt: createdAt(),
 });
 
@@ -134,4 +147,22 @@ export const traceSpans = pgTable("trace_spans", {
   endedAt: timestamp("ended_at", { withTimezone: true }),
   status: text("status").notNull().default("ok"),
   meta: jsonb("meta").$type<Record<string, unknown>>(),
+});
+
+/** One profile per workspace: what the criteria engine compares postings against. */
+export const profiles = pgTable("profiles", {
+  workspaceId: uuid("workspace_id")
+    .primaryKey()
+    .references(() => workspaces.id, { onDelete: "cascade" }),
+  yearsOfExperience: integer("years_of_experience"),
+  /** ISO 3166-1 alpha-2 codes, e.g. ["DE", "NL"]. */
+  targetCountries: text("target_countries").array().notNull().default([]),
+  relocationNeeded: boolean("relocation_needed").notNull().default(false),
+  /** The CV used for matching; older CVs stay so past analyses keep their evidence. */
+  activeCvId: uuid("active_cv_id").references(() => cvs.id, {
+    onDelete: "set null",
+  }),
+  updatedAt: timestamp("updated_at", { withTimezone: true })
+    .notNull()
+    .defaultNow(),
 });

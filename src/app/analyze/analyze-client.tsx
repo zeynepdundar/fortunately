@@ -3,9 +3,10 @@
 import { useObject } from "@ai-sdk/react";
 import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
+import { FactsBar } from "@/components/facts-bar";
 import { RequirementRow } from "@/components/requirement-row";
 import { needsApiKey } from "@/lib/ai/provider-id";
-import { cleanPartialRequirements } from "@/lib/extraction";
+import { cleanFacts, cleanPartialRequirements } from "@/lib/extraction";
 import {
   ANALYSIS_ID_HEADER,
   ExtractRequest,
@@ -200,6 +201,15 @@ export function AnalyzeClient({ samples }: { samples: SamplePosting[] }) {
               ` · first item in ${(firstItemMs / 1000).toFixed(1)} s`}
           </p>
         </div>
+
+        {object?.facts && (
+          <div className="rounded-lg border border-neutral-200 px-3 py-2.5 dark:border-neutral-800">
+            {object.facts.title && (
+              <p className="mb-1 text-sm font-semibold">{object.facts.title}</p>
+            )}
+            <FactsBar facts={cleanFacts(object.facts)} />
+          </div>
+        )}
 
         {error && (
           <p

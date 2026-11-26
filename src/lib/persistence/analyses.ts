@@ -2,7 +2,7 @@ import "server-only";
 import { and, asc, eq } from "drizzle-orm";
 import { getDb } from "@/db";
 import { analyses, postings, requirements } from "@/db/schema";
-import type { Requirement } from "@/lib/schemas";
+import type { PostingFacts, Requirement } from "@/lib/schemas";
 import { postingHash, postingTitle } from "./posting-meta";
 
 /** Create (or reuse) the posting and open a running analysis. Returns the analysis id. */
@@ -57,6 +57,7 @@ export async function startAnalysis(input: {
 export async function finishAnalysis(
   analysisId: string,
   result: {
+    facts: PostingFacts;
     requirements: Requirement[];
     latencyMs: number;
     tokensIn?: number;
@@ -82,6 +83,12 @@ export async function finishAnalysis(
     .update(analyses)
     .set({
       status: "done",
+      jobTitle: result.facts.title,
+      company: result.facts.company,
+      country: result.facts.country,
+      city: result.facts.city,
+      workMode: result.facts.workMode,
+      relocation: result.facts.relocation,
       latencyMs: Math.round(result.latencyMs),
       tokensIn: result.tokensIn ?? 0,
       tokensOut: result.tokensOut ?? 0,
@@ -115,6 +122,12 @@ export async function getAnalysis(analysisId: string, workspaceId: string) {
       promptVersion: analyses.promptVersion,
       latencyMs: analyses.latencyMs,
       createdAt: analyses.createdAt,
+      jobTitle: analyses.jobTitle,
+      company: analyses.company,
+      country: analyses.country,
+      city: analyses.city,
+      workMode: analyses.workMode,
+      relocation: analyses.relocation,
       postingTitle: postings.title,
       postingText: postings.rawText,
     })

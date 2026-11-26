@@ -22,3 +22,14 @@ export async function loadSamplePostings(): Promise<SamplePosting[]> {
     }),
   );
 }
+
+/** The fictional sample CV shipped in the repo. */
+export async function loadSampleCv(): Promise<string> {
+  "use cache";
+  return (
+    await readFile(
+      path.join(process.cwd(), "samples", "cv-alex-rivera.md"),
+      "utf8",
+    )
+  ).trim();
+}

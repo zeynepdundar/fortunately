@@ -1,5 +1,5 @@
 import type { DeepPartial } from "ai";
-import type { Extraction, Requirement } from "@/lib/schemas";
+import type { Extraction, PostingFacts, Requirement } from "@/lib/schemas";
 import { normalizeSkill } from "@/lib/skills";
 
 type PartialRequirement = DeepPartial<Requirement>;
@@ -103,6 +103,40 @@ function dedupeKey(item: PartialRequirement): string {
   return `${(item.text ?? "").trim().toLowerCase()}|${(item.skills ?? []).join(",")}`;
 }
 
+/** Common non-ISO codes a model may emit. */
+const COUNTRY_ALIASES: Record<string, string> = { UK: "GB" };
+
+function cleanText(
+  value: string | null | undefined,
+): string | null | undefined {
+  if (value === undefined) return undefined;
+  const trimmed = value?.trim();
+  return trimmed ? trimmed : null;
+}
+
+/** Normalise a country to an ISO 3166-1 alpha-2 code, or null. */
+export function cleanCountry(
+  value: string | null | undefined,
+): string | null | undefined {
+  if (value === undefined) return undefined;
+  const code = value?.trim().toUpperCase() ?? "";
+  const mapped = COUNTRY_ALIASES[code] ?? code;
+  return /^[A-Z]{2}$/.test(mapped) ? mapped : null;
+}
+
+/** Trim free text and validate the country code; safe on partial (streaming) facts. */
+export function cleanFacts<T extends DeepPartial<PostingFacts> | PostingFacts>(
+  facts: T,
+): T {
+  return {
+    ...facts,
+    title: cleanText(facts.title),
+    company: cleanText(facts.company),
+    city: cleanText(facts.city),
+    country: cleanCountry(facts.country),
+  };
+}
+
 /** Clean every requirement and drop exact duplicates, keeping the first. */
 export function cleanExtraction(
   extraction: Extraction,
@@ -117,7 +151,7 @@ export function cleanExtraction(
     seen.add(key);
     requirements.push(item);
   }
-  return { requirements };
+  return { facts: cleanFacts(extraction.facts), requirements };
 }
 
 /** Streaming variant for the UI: clean each partial item, hide complete duplicates. */

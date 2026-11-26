@@ -2,10 +2,17 @@ import { Output, streamText, type LanguageModel } from "ai";
 import { Extraction } from "@/lib/schemas";
 
 /** Bump when the instructions change, so eval results stay comparable. */
-export const EXTRACTION_PROMPT_VERSION = "extract-v4";
+export const EXTRACTION_PROMPT_VERSION = "extract-v5";
 
-export const EXTRACTION_INSTRUCTIONS = `You extract the candidate requirements from a job posting.
-Return one entry per requirement, in the order of the posting. Never add anything the posting does not ask for.
+export const EXTRACTION_INSTRUCTIONS = `You extract facts about the job and the candidate requirements from a job posting.
+Return the facts first, then one entry per requirement in the order of the posting. Never add anything the posting does not state.
+
+FACTS
+- title: the job title as written; company: the company name as written. null when absent.
+- country: ISO 3166-1 alpha-2 code of the job location ("Berlin" -> "DE", "Amsterdam" -> "NL"). null when no single country is stated (e.g. "remote within the EU").
+- city: the city as written, or null.
+- workMode: "remote", "hybrid" or "onsite" as the posting states it; null when not stated.
+- relocation: "yes" only when the posting explicitly offers relocation support, a relocation package or help with moving or visas; "no" only when it explicitly rules relocation out or requires candidates to live there already; otherwise "not_stated". Never guess.
 
 WHAT TO INCLUDE
 - Qualifications the candidate should have: technologies, years of experience, education, spoken languages, domain knowledge, ways of working.
@@ -44,6 +51,7 @@ MIN YEARS
 
 EXAMPLES
 Posting lines:
+  # Frontend Developer - Brightleaf (Rotterdam, hybrid)
   Requirements
   - 4+ years of Vue and Nuxt.
   - A state library such as Pinia or Vuex.
@@ -51,6 +59,9 @@ Posting lines:
   - Experience leading a framework migration.
   Nice to have
   - Fluent Dutch.
+  We help with your move to the Netherlands.
+Facts:
+  {"title":"Frontend Developer","company":"Brightleaf","country":"NL","city":"Rotterdam","workMode":"hybrid","relocation":"yes"}
 Entries:
   {"text":"4+ years of Vue and Nuxt","kind":"must","category":"technology","skills":["vue","nuxt"],"anyOf":false,"minYears":4}
   {"text":"A state library such as Pinia or Vuex","kind":"must","category":"technology","skills":["pinia","vuex"],"anyOf":true,"minYears":null}

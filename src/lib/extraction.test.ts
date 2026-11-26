@@ -1,7 +1,9 @@
 import { describe, expect, it } from "vitest";
 import type { Requirement } from "@/lib/schemas";
 import {
+  cleanCountry,
   cleanExtraction,
+  cleanFacts,
   cleanPartialRequirements,
   cleanRequirement,
   restoreCasing,
@@ -15,6 +17,39 @@ const req = (overrides: Partial<Requirement>): Requirement => ({
   anyOf: false,
   minYears: null,
   ...overrides,
+});
+
+const facts = {
+  title: "Frontend Engineer",
+  company: "Acme",
+  country: "DE",
+  city: "Berlin",
+  workMode: "hybrid" as const,
+  relocation: "not_stated" as const,
+};
+
+describe("cleanFacts", () => {
+  it("normalises the country code", () => {
+    expect(cleanCountry("de")).toBe("DE");
+    expect(cleanCountry("UK")).toBe("GB");
+    expect(cleanCountry("Germany")).toBeNull();
+    expect(cleanCountry(null)).toBeNull();
+  });
+
+  it("turns blank text into null", () => {
+    const cleaned = cleanFacts({ ...facts, city: "  ", company: " Acme " });
+    expect(cleaned.city).toBeNull();
+    expect(cleaned.company).toBe("Acme");
+  });
+
+  it("leaves missing (streaming) fields undefined", () => {
+    expect(cleanFacts({ title: "Front" })).toEqual({
+      title: "Front",
+      company: undefined,
+      city: undefined,
+      country: undefined,
+    });
+  });
 });
 
 describe("cleanRequirement", () => {
@@ -110,6 +145,7 @@ describe("alternatives, generic words and casing", () => {
     const posting = "- Experience with Storybook.";
     const { requirements } = cleanExtraction(
       {
+        facts,
         requirements: [
           req({ text: "experience with storybook", skills: ["storybook"] }),
         ],
@@ -123,6 +159,7 @@ describe("alternatives, generic words and casing", () => {
 describe("cleanExtraction", () => {
   it("drops exact duplicates and keeps order", () => {
     const result = cleanExtraction({
+      facts,
       requirements: [
         req({ text: "React", skills: ["react"] }),
         req({ text: "TypeScript", skills: ["typescript"] }),

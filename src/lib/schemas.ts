@@ -21,7 +21,23 @@ export const Requirement = z.object({
 });
 export type Requirement = z.infer<typeof Requirement>;
 
-export const Extraction = z.object({ requirements: z.array(Requirement) });
+/** Facts about the job itself, used by filters and the criteria engine. */
+export const PostingFacts = z.object({
+  title: z.string().nullable(),
+  company: z.string().nullable(),
+  /** ISO 3166-1 alpha-2 code of the job location, e.g. "DE". Null when not stated or not one country. */
+  country: z.string().nullable(),
+  city: z.string().nullable(),
+  workMode: z.enum(["remote", "hybrid", "onsite"]).nullable(),
+  /** "yes" or "no" only when the posting says so explicitly. */
+  relocation: z.enum(["yes", "no", "not_stated"]),
+});
+export type PostingFacts = z.infer<typeof PostingFacts>;
+
+export const Extraction = z.object({
+  facts: PostingFacts,
+  requirements: z.array(Requirement),
+});
 export type Extraction = z.infer<typeof Extraction>;
 
 /**

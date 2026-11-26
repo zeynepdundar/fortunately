@@ -4,6 +4,14 @@ import { describe, expect, it } from "vitest";
 import { EXTRACTION_INSTRUCTIONS, streamExtraction } from "./extract";
 
 const extraction = {
+  facts: {
+    title: "Senior Frontend Engineer",
+    company: "Lumora Pay",
+    country: null,
+    city: null,
+    workMode: "remote",
+    relocation: "not_stated",
+  },
   requirements: [
     {
       text: "5+ years of frontend experience",
@@ -84,7 +92,9 @@ describe("streamExtraction", () => {
   });
 
   it("sends the instructions and wraps the posting", async () => {
-    const model = mockModel(JSON.stringify({ requirements: [] }));
+    const model = mockModel(
+      JSON.stringify({ facts: extraction.facts, requirements: [] }),
+    );
     const result = streamExtraction({ model, posting: "POSTING BODY" });
     await result.output;
 
@@ -97,7 +107,9 @@ describe("streamExtraction", () => {
   });
 
   it("turns thinking off only when asked", async () => {
-    const off = mockModel(JSON.stringify({ requirements: [] }));
+    const off = mockModel(
+      JSON.stringify({ facts: extraction.facts, requirements: [] }),
+    );
     await streamExtraction({
       model: off,
       posting: "BODY",
@@ -110,7 +122,9 @@ describe("streamExtraction", () => {
       ollama: { reasoningEffort: "none" },
     });
 
-    const on = mockModel(JSON.stringify({ requirements: [] }));
+    const on = mockModel(
+      JSON.stringify({ facts: extraction.facts, requirements: [] }),
+    );
     await streamExtraction({ model: on, posting: "BODY" }).output;
     expect(JSON.stringify(on.doStreamCalls[0].prompt)).not.toContain(
       "/no_think",

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
+import { FactsBar } from "@/components/facts-bar";
 import { RequirementRow } from "@/components/requirement-row";
 import { getAnalysis } from "@/lib/persistence/analyses";
 import { readWorkspaceId } from "@/lib/persistence/workspace";
@@ -49,8 +50,19 @@ async function AnalysisView({ params }: { params: Promise<{ id: string }> }) {
           ← Analyze another posting
         </Link>
         <h1 className="text-2xl font-semibold tracking-tight">
-          {analysis.postingTitle ?? "Untitled posting"}
+          {analysis.jobTitle ?? analysis.postingTitle ?? "Untitled posting"}
         </h1>
+        {analysis.status === "done" && (
+          <FactsBar
+            facts={{
+              company: analysis.company,
+              country: analysis.country,
+              city: analysis.city,
+              workMode: analysis.workMode,
+              relocation: analysis.relocation ?? "not_stated",
+            }}
+          />
+        )}
         <p className="text-xs text-neutral-500 tabular-nums">
           {date} · {analysis.provider} / {analysis.model} ·{" "}
           {analysis.promptVersion}

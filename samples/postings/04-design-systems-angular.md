@@ -20,3 +20,7 @@ Our design system team maintains the component library used by 12 product teams.
 - Visual regression testing.
 - Figma, including working with the Figma API.
 - Web Components or Lit.
+
+## Good to know
+
+We cannot offer relocation support or visa sponsorship for this role; you need to be based in Germany already.

@@ -22,3 +22,7 @@ Kestrel Labs is a seed-stage startup building AI assistants for customer support
 - Experience with vector databases or pgvector.
 - Built evaluation pipelines for ML or LLM features.
 - German language skills.
+
+## What we offer
+
+Competitive salary and equity. We sponsor visas and offer a relocation package for moving to Berlin.

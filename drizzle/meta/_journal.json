@@ -15,6 +15,20 @@
       "when": 1795453405032,
       "tag": "0001_peaceful_venom",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1795700066713,
+      "tag": "0002_rapid_gladiator",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1795700523031,
+      "tag": "0003_smart_doctor_strange",
+      "breakpoints": true
     }
   ]
 }

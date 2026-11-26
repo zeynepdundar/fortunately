@@ -70,7 +70,7 @@ export async function POST(req: Request) {
       if (!analysisId || !settleOnce()) return;
       await saveSafely(() =>
         finishAnalysis(analysisId, {
-          requirements: cleanExtraction(output, posting).requirements,
+          ...cleanExtraction(output, posting),
           latencyMs: elapsed(),
           tokensIn: inputTokens,
           tokensOut: outputTokens,

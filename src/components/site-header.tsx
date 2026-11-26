@@ -14,6 +14,12 @@ export function SiteHeader() {
           Analyze
         </Link>
         <Link
+          href="/profile"
+          className="text-neutral-600 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-white"
+        >
+          Profile
+        </Link>
+        <Link
           href="/settings"
           className="text-neutral-600 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-white"
         >
