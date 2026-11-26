@@ -1,5 +1,5 @@
 import type { DeepPartial } from "ai";
-import type { Requirement } from "@/lib/schemas";
+import type { CheckedMatch, Requirement } from "@/lib/schemas";
 
 const CATEGORY_LABEL: Record<Requirement["category"], string> = {
   technology: "Tech",
@@ -36,9 +36,12 @@ function Badge({
 export function RequirementRow({
   index,
   item,
+  match,
 }: {
   index: number;
   item: DeepPartial<Requirement> | undefined;
+  /** The checked CV match for this requirement, once available. */
+  match?: DeepPartial<CheckedMatch>;
 }) {
   const ready = Boolean(item?.text);
   return (
@@ -74,7 +77,63 @@ export function RequirementRow({
             <Badge>{item.minYears}+ yrs</Badge>
           )}
         </div>
+        {match?.verdict && (
+          <div className="mt-2 flex flex-col gap-1 text-xs" data-testid="match">
+            {match.evidence
+              ?.filter((e) => e?.text)
+              .map((e) => (
+                <p
+                  key={e?.n}
+                  className="text-neutral-600 dark:text-neutral-400"
+                >
+                  <span className="mr-1.5 font-mono text-neutral-400 tabular-nums">
+                    L{e?.n}
+                  </span>
+                  &ldquo;{e?.text}&rdquo;
+                </p>
+              ))}
+            {match.rationale && (
+              <p className="text-neutral-500">{match.rationale}</p>
+            )}
+            {match.verified === false && (
+              <p className="text-amber-700 dark:text-amber-400">
+                The model cited a CV line that does not exist, so this was
+                marked missing.
+              </p>
+            )}
+          </div>
+        )}
       </div>
+      {match?.verdict && <VerdictChip verdict={match.verdict} />}
     </li>
+  );
+}
+
+const VERDICT = {
+  met: {
+    label: "Met",
+    className:
+      "bg-emerald-50 text-emerald-700 ring-emerald-200 dark:bg-emerald-950 dark:text-emerald-300 dark:ring-emerald-900",
+  },
+  partial: {
+    label: "Partial",
+    className:
+      "bg-amber-50 text-amber-800 ring-amber-200 dark:bg-amber-950 dark:text-amber-300 dark:ring-amber-900",
+  },
+  missing: {
+    label: "Missing",
+    className:
+      "bg-neutral-100 text-neutral-600 ring-neutral-300 dark:bg-neutral-900 dark:text-neutral-400 dark:ring-neutral-700",
+  },
+} as const;
+
+export function VerdictChip({ verdict }: { verdict: CheckedMatch["verdict"] }) {
+  const v = VERDICT[verdict];
+  return (
+    <span
+      className={`h-fit shrink-0 rounded-md px-2 py-0.5 text-xs font-semibold ring-1 ring-inset ${v.className}`}
+    >
+      {v.label}
+    </span>
   );
 }

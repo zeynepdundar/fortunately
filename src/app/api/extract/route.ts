@@ -1,14 +1,8 @@
 import { createTextStreamResponse, toTextStream } from "ai";
 import { z } from "zod";
 import { EXTRACTION_PROMPT_VERSION, streamExtraction } from "@/lib/ai/extract";
-import { supportsThinkingToggle } from "@/lib/ai/models";
-import { getModel, isOllamaEnabled } from "@/lib/ai/provider";
-import { needsApiKey } from "@/lib/ai/provider-id";
-import {
-  ANALYSIS_ID_HEADER,
-  ExtractRequest,
-  KEY_HEADER,
-} from "@/lib/api/extract-contract";
+import { ANALYSIS_ID_HEADER, ExtractRequest } from "@/lib/api/extract-contract";
+import { modelFromRequest } from "@/lib/api/model-access";
 import { cleanExtraction } from "@/lib/extraction";
 import {
   failAnalysis,
@@ -32,23 +26,8 @@ export async function POST(req: Request) {
   }
   const { posting, provider, modelId, thinking } = parsed.data;
 
-  if (provider === "ollama" && !isOllamaEnabled()) {
-    return Response.json(
-      {
-        error: "provider_disabled",
-        message: "Ollama is only available when running locally.",
-      },
-      { status: 400 },
-    );
-  }
-
-  const apiKey = req.headers.get(KEY_HEADER)?.trim();
-  if (needsApiKey(provider) && !apiKey) {
-    return Response.json(
-      { error: "missing_key", message: "Add your API key in Settings." },
-      { status: 401 },
-    );
-  }
+  const access = modelFromRequest(req, { provider, modelId, thinking });
+  if (!access.ok) return access.response;
 
   const startedAt = performance.now();
   const analysisId = await openAnalysis({ posting, provider, modelId });
@@ -62,9 +41,9 @@ export async function POST(req: Request) {
   };
 
   const result = streamExtraction({
-    model: getModel({ provider, modelId, apiKey }),
+    model: access.model,
     posting,
-    disableThinking: supportsThinkingToggle(provider, modelId) && !thinking,
+    disableThinking: access.disableThinking,
     abortSignal: req.signal,
     onComplete: async ({ output, inputTokens, outputTokens }) => {
       if (!analysisId || !settleOnce()) return;

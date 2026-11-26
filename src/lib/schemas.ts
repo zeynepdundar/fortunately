@@ -53,3 +53,19 @@ export const Match = z.object({
 export type Match = z.infer<typeof Match>;
 
 export const MatchBatch = z.object({ matches: z.array(Match) });
+
+/**
+ * What the client receives: a match already checked against the CV on the server,
+ * with the cited lines' text attached. Unverified model output never reaches the UI.
+ */
+export const CheckedMatch = z.object({
+  requirementIndex: z.number().int(),
+  verdict: z.enum(["met", "partial", "missing"]),
+  evidence: z.array(z.object({ n: z.number().int(), text: z.string() })),
+  rationale: z.string(),
+  /** false = the model cited lines that do not exist; the verdict was forced to missing. */
+  verified: z.boolean(),
+});
+export type CheckedMatch = z.infer<typeof CheckedMatch>;
+
+export const CheckedMatches = z.object({ matches: z.array(CheckedMatch) });

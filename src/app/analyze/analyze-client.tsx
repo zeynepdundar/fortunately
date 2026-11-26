@@ -13,7 +13,7 @@ import {
   KEY_HEADER,
 } from "@/lib/api/extract-contract";
 import type { SamplePosting } from "@/lib/samples";
-import { Extraction } from "@/lib/schemas";
+import { CheckedMatches, Extraction } from "@/lib/schemas";
 import { useHydrated } from "@/lib/use-hydrated";
 import { useSettings } from "@/stores/settings";
 
@@ -40,6 +40,7 @@ export function AnalyzeClient({ samples }: { samples: SamplePosting[] }) {
   const startedAt = useRef<number | null>(null);
   const [submittedPosting, setSubmittedPosting] = useState("");
   const [analysisId, setAnalysisId] = useState<string | null>(null);
+  const analysisIdRef = useRef<string | null>(null);
 
   // Settings live in sessionStorage, so read them only after hydration.
   const hydrated = useHydrated();
@@ -59,10 +60,50 @@ export function AnalyzeClient({ samples }: { samples: SamplePosting[] }) {
     // Read the saved analysis id from the response headers.
     fetch: async (input, init) => {
       const response = await fetch(input, init);
-      setAnalysisId(response.headers.get(ANALYSIS_ID_HEADER));
+      const id = response.headers.get(ANALYSIS_ID_HEADER);
+      analysisIdRef.current = id;
+      setAnalysisId(id);
       return response;
     },
+    // Once requirements are saved, match them against the profile CV.
+    onFinish: ({ object: finished, error: finishError }) => {
+      const id = analysisIdRef.current;
+      if (finishError || !finished || !id) return;
+      const s = useSettings.getState();
+      matching.submit({
+        analysisId: id,
+        provider: s.provider,
+        modelId: s.modelId,
+        thinking: s.thinking,
+      });
+    },
   });
+
+  const matching = useObject({
+    api: "/api/match",
+    schema: CheckedMatches,
+    headers: (): Record<string, string> => {
+      const key = useSettings.getState().apiKey;
+      return key ? { [KEY_HEADER]: key } : {};
+    },
+  });
+  const matchObject = matching.object;
+  const matchByIndex = useMemo(() => {
+    const map = new Map<
+      number,
+      NonNullable<NonNullable<typeof matchObject>["matches"]>[number]
+    >();
+    for (const m of matchObject?.matches ?? []) {
+      if (m && typeof m.requirementIndex === "number")
+        map.set(m.requirementIndex, m);
+    }
+    return map;
+  }, [matchObject]);
+  const verdictCounts = useMemo(() => {
+    const counts = { met: 0, partial: 0, missing: 0 };
+    for (const m of matchByIndex.values()) if (m?.verdict) counts[m.verdict]++;
+    return counts;
+  }, [matchByIndex]);
 
   const requirements = useMemo(
     () =>
@@ -100,6 +141,8 @@ export function AnalyzeClient({ samples }: { samples: SamplePosting[] }) {
     startedAt.current = performance.now();
     setSubmittedPosting(parsed.data.posting);
     setAnalysisId(null);
+    analysisIdRef.current = null;
+    matching.clear();
     submit(parsed.data);
   }
 
@@ -223,7 +266,12 @@ export function AnalyzeClient({ samples }: { samples: SamplePosting[] }) {
         {requirements.length > 0 ? (
           <ol className="rounded-lg border border-neutral-200 px-3 dark:border-neutral-800">
             {requirements.map((item, i) => (
-              <RequirementRow key={i} index={i} item={item} />
+              <RequirementRow
+                key={i}
+                index={i}
+                item={item}
+                match={matchByIndex.get(i)}
+              />
             ))}
           </ol>
         ) : (
@@ -231,6 +279,29 @@ export function AnalyzeClient({ samples }: { samples: SamplePosting[] }) {
             {isLoading
               ? "Reading the posting…"
               : "Requirements will stream in here."}
+          </div>
+        )}
+        {(matching.isLoading || matching.object || matching.error) && (
+          <div className="text-sm" aria-live="polite">
+            {matching.isLoading && (
+              <p className="text-neutral-500">Matching against your CV…</p>
+            )}
+            {!matching.isLoading && matching.object && (
+              <p className="text-neutral-600 tabular-nums dark:text-neutral-400">
+                CV match: {verdictCounts.met} met · {verdictCounts.partial}{" "}
+                partial · {verdictCounts.missing} missing
+              </p>
+            )}
+            {matching.error && (
+              <p role="alert" className="text-amber-800 dark:text-amber-300">
+                {errorMessage(matching.error)}{" "}
+                {matching.error.message.includes("no_cv") && (
+                  <Link href="/profile" className="font-medium underline">
+                    Open Profile
+                  </Link>
+                )}
+              </p>
+            )}
           </div>
         )}
         {analysisId && !isLoading && !error && requirements.length > 0 && (
