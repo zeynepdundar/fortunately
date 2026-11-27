@@ -4,6 +4,7 @@ import { LogoMark } from "./logo";
 const LINKS = [
   { href: "/analyze", label: "Analyze" },
   { href: "/postings", label: "Postings" },
+  { href: "/insights", label: "Insights" },
   { href: "/profile", label: "Profile" },
   { href: "/settings", label: "Settings" },
 ] as const;

@@ -23,7 +23,7 @@ export type ListedAnalysis = {
   relocation: PostingFacts["relocation"];
   createdAt: Date;
   requirements: (PostingInput["requirements"][number] &
-    Pick<Requirement, "category" | "skills">)[];
+    Pick<Requirement, "category" | "skills" | "anyOf">)[];
   matches: (Pick<CheckedMatch, "verdict"> | undefined)[];
 };
 

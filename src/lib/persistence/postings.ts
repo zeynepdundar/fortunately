@@ -47,6 +47,7 @@ export async function listLatestAnalyses(
       kind: requirements.kind,
       category: requirements.category,
       skills: requirements.skills,
+      anyOf: requirements.anyOf,
       minYears: requirements.minYears,
     })
     .from(requirements)
@@ -89,6 +90,7 @@ export async function listLatestAnalyses(
         kind: q.kind,
         category: q.category,
         skills: q.skills,
+        anyOf: q.anyOf,
         minYears: q.minYears,
       })),
       matches: reqs.map((q) => {

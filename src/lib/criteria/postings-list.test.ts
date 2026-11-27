@@ -23,7 +23,13 @@ const analysis = (
   relocation: "yes",
   createdAt: new Date("2026-11-26T10:00:00Z"),
   requirements: [
-    { kind: "must", category: "technology", skills: ["react"], minYears: null },
+    {
+      kind: "must",
+      category: "technology",
+      skills: ["react"],
+      anyOf: false,
+      minYears: null,
+    },
   ],
   matches: [{ verdict: "met" }],
   ...overrides,
