@@ -37,11 +37,14 @@ export function RequirementRow({
   index,
   item,
   match,
+  yearsOfExperience,
 }: {
   index: number;
   item: DeepPartial<Requirement> | undefined;
   /** The checked CV match for this requirement, once available. */
   match?: DeepPartial<CheckedMatch>;
+  /** The visitor's years from Profile; pass it to explain year requirements (null = not filled in). */
+  yearsOfExperience?: number | null;
 }) {
   const ready = Boolean(item?.text);
   return (
@@ -77,6 +80,14 @@ export function RequirementRow({
             <Badge>{item.minYears}+ yrs</Badge>
           )}
         </div>
+        {typeof item?.minYears === "number" &&
+          yearsOfExperience !== undefined && (
+            <p className="mt-1.5 text-xs text-neutral-500" data-testid="years">
+              {yearsOfExperience === null
+                ? `Asks ${item.minYears}+ years; add yours in Profile`
+                : `Asks ${item.minYears}+ years, you have ${yearsOfExperience}`}
+            </p>
+          )}
         {match?.verdict && (
           <div className="mt-2 flex flex-col gap-1 text-xs" data-testid="match">
             {match.evidence

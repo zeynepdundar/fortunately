@@ -12,26 +12,11 @@ import {
   ExtractRequest,
   KEY_HEADER,
 } from "@/lib/api/extract-contract";
+import { errorMessage } from "@/lib/api/error-message";
 import type { SamplePosting } from "@/lib/samples";
 import { CheckedMatches, Extraction } from "@/lib/schemas";
 import { useHydrated } from "@/lib/use-hydrated";
 import { useSettings } from "@/stores/settings";
-
-/** Server errors arrive as the JSON body in error.message. */
-function errorMessage(error: Error): string {
-  try {
-    const body = JSON.parse(error.message) as {
-      message?: string;
-      error?: string;
-    };
-    if (body.message) return body.message;
-    if (body.error === "invalid_input")
-      return "The request was invalid. Check the posting and your model.";
-  } catch {
-    // not JSON: a provider or network error
-  }
-  return "Something went wrong. Check your provider, model and API key in Settings (for Ollama: is it running?), then try again.";
-}
 
 export function AnalyzeClient({ samples }: { samples: SamplePosting[] }) {
   const [posting, setPosting] = useState("");
@@ -304,17 +289,21 @@ export function AnalyzeClient({ samples }: { samples: SamplePosting[] }) {
             )}
           </div>
         )}
-        {analysisId && !isLoading && !error && requirements.length > 0 && (
-          <p className="text-sm text-neutral-600 dark:text-neutral-400">
-            Saved.{" "}
-            <Link
-              href={`/analyses/${analysisId}`}
-              className="font-medium underline"
-            >
-              Open the permanent result
-            </Link>
-          </p>
-        )}
+        {analysisId &&
+          !isLoading &&
+          !error &&
+          !matching.isLoading &&
+          requirements.length > 0 && (
+            <p className="text-sm text-neutral-600 dark:text-neutral-400">
+              Saved.{" "}
+              <Link
+                href={`/analyses/${analysisId}`}
+                className="font-medium underline"
+              >
+                Open the permanent result
+              </Link>
+            </p>
+          )}
       </section>
     </main>
   );

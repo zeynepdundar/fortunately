@@ -3,8 +3,14 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
 import { FactsBar } from "@/components/facts-bar";
+import { hiddenReason, PreferenceBadges } from "@/components/match-summary";
 import { RequirementRow } from "@/components/requirement-row";
+import { evaluatePosting, type Evaluation } from "@/lib/criteria/engine";
+import { toEngineProfile } from "@/lib/criteria/postings-list";
+import { MatchButton } from "./match-button";
 import { getAnalysis } from "@/lib/persistence/analyses";
+import { getCriteria, getProfile } from "@/lib/persistence/profile";
+import type { PostingFacts } from "@/lib/schemas";
 import { countVerdicts } from "@/lib/stored-matches";
 import { readWorkspaceId } from "@/lib/persistence/workspace";
 
@@ -31,9 +37,33 @@ async function AnalysisView({ params }: { params: Promise<{ id: string }> }) {
   if (!UUID.test(id)) notFound();
   const workspaceId = await readWorkspaceId();
   if (!workspaceId) notFound();
-  const analysis = await getAnalysis(id, workspaceId);
+  const [analysis, profile, criteria] = await Promise.all([
+    getAnalysis(id, workspaceId),
+    getProfile(workspaceId),
+    getCriteria(workspaceId),
+  ]);
   if (!analysis) notFound();
 
+  const evaluation = evaluatePosting(
+    {
+      facts: {
+        country: analysis.country,
+        relocation: analysis.relocation ?? "not_stated",
+        workMode: analysis.workMode,
+      },
+      requirements: analysis.requirements,
+      matches: analysis.matches,
+    },
+    toEngineProfile(profile),
+    criteria.config,
+  );
+
+  const mustTexts = (verdict: "missing" | "partial") =>
+    analysis.requirements
+      .filter(
+        (r, i) => r.kind === "must" && analysis.matches[i]?.verdict === verdict,
+      )
+      .map((r) => r.text);
   const verdicts = countVerdicts(analysis.matches);
   const matched = analysis.matches.some(Boolean);
   const must = analysis.requirements.filter((r) => r.kind === "must").length;
@@ -91,6 +121,21 @@ async function AnalysisView({ params }: { params: Promise<{ id: string }> }) {
         </p>
       )}
 
+      {analysis.status === "done" && analysis.requirements.length > 0 && (
+        <MatchSummary
+          evaluation={evaluation}
+          usingDefaults={criteria.isDefault}
+          hasProfile={profile !== null}
+          hasCv={Boolean(profile?.cv)}
+          analysisId={analysis.id}
+          mustByVerdict={{
+            missing: mustTexts("missing"),
+            partial: mustTexts("partial"),
+          }}
+          facts={{ country: analysis.country, workMode: analysis.workMode }}
+        />
+      )}
+
       {analysis.requirements.length > 0 && (
         <section
           aria-labelledby="requirements-heading"
@@ -113,23 +158,12 @@ async function AnalysisView({ params }: { params: Promise<{ id: string }> }) {
                 index={i}
                 item={item}
                 match={analysis.matches[i]}
+                yearsOfExperience={profile?.yearsOfExperience ?? null}
               />
             ))}
           </ol>
         </section>
       )}
-
-      {analysis.status === "done" &&
-        analysis.requirements.length > 0 &&
-        !matched && (
-          <p className="text-sm text-neutral-500">
-            Not matched against a CV yet. Add your CV in{" "}
-            <Link href="/profile" className="font-medium underline">
-              Profile
-            </Link>
-            , then analyze the posting again.
-          </p>
-        )}
 
       <details className="rounded-lg border border-neutral-200 p-3 text-sm dark:border-neutral-800">
         <summary className="cursor-pointer font-medium">
@@ -140,5 +174,143 @@ async function AnalysisView({ params }: { params: Promise<{ id: string }> }) {
         </pre>
       </details>
     </>
+  );
+}
+
+const PRIMARY_BUTTON =
+  "inline-flex rounded-md bg-neutral-900 px-4 py-2 text-sm font-medium text-white dark:bg-white dark:text-neutral-900";
+
+/**
+ * Must-haves met, the facts behind it and how the posting fits your preferences.
+ * Before a CV match exists it only says how to get one: no score, no preferences.
+ */
+function MatchSummary({
+  evaluation,
+  usingDefaults,
+  hasProfile,
+  hasCv,
+  mustByVerdict,
+  facts,
+  analysisId,
+}: {
+  evaluation: Evaluation;
+  usingDefaults: boolean;
+  hasProfile: boolean;
+  hasCv: boolean;
+  /** Texts of the must-haves the CV does not fully prove. */
+  mustByVerdict: { missing: string[]; partial: string[] };
+  facts: Pick<PostingFacts, "country" | "workMode">;
+  analysisId: string;
+}) {
+  const { match } = evaluation;
+
+  if (!match.matched) {
+    return (
+      <section
+        aria-labelledby="match-heading"
+        className="flex flex-col items-start gap-3 rounded-lg border border-neutral-200 p-4 dark:border-neutral-800"
+        data-testid="match-pending"
+      >
+        <h2 id="match-heading" className="text-lg font-semibold">
+          Your match
+        </h2>
+        {hasCv ? (
+          <>
+            <p className="text-sm text-neutral-600 dark:text-neutral-400">
+              Match this posting with your CV to see how well you fit the job.
+            </p>
+            <MatchButton analysisId={analysisId} className={PRIMARY_BUTTON} />
+          </>
+        ) : (
+          <>
+            <p className="text-sm text-neutral-600 dark:text-neutral-400">
+              Add your CV to see how well you match this job.
+            </p>
+            <Link href="/profile" className={PRIMARY_BUTTON}>
+              Add CV
+            </Link>
+          </>
+        )}
+      </section>
+    );
+  }
+
+  // "Not stated" facts already sit in the posting details; repeat one here only
+  // when it is the reason the posting is hidden.
+  const preferences = evaluation.preferences.filter(
+    (p) => p.status !== "unknown" || p.hidden,
+  );
+  const hidden = evaluation.preferences.filter((p) => p.hidden);
+  const status =
+    evaluation.bucket === "filtered_out"
+      ? `Hidden from Postings because ${hidden.map((p) => hiddenReason(p, facts)).join(" and ")}`
+      : evaluation.bucket === "below_threshold"
+        ? `Below threshold in Postings: ${evaluation.belowThreshold.join(", ")}`
+        : `Using ${usingDefaults ? "the default preferences" : "your preferences"}`;
+  const gaps = [
+    { label: "Missing", items: mustByVerdict.missing },
+    { label: "Partly met", items: mustByVerdict.partial },
+  ].filter((g) => g.items.length > 0);
+
+  return (
+    <section
+      aria-labelledby="match-heading"
+      className="flex gap-4 rounded-lg border border-neutral-200 p-4 dark:border-neutral-800"
+    >
+      <div className="min-w-0 flex-1">
+        <h2 id="match-heading" className="text-lg font-semibold">
+          Your match
+        </h2>
+        {gaps.length > 0 ? (
+          <div className="mt-1 flex flex-col gap-2" data-testid="gaps">
+            {gaps.map((g) => (
+              <div key={g.label}>
+                <h3 className="text-xs font-medium text-neutral-500">
+                  {g.label}
+                </h3>
+                <ul className="mt-0.5 list-disc pl-4 text-sm">
+                  {g.items.map((text) => (
+                    <li key={text}>{text}</li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <p className="mt-1 text-sm">Every must-have is proven by your CV.</p>
+        )}
+        {match.nice.total > 0 && (
+          <p className="mt-1 text-xs text-neutral-500 tabular-nums">
+            {match.nice.met} of {match.nice.total} nice-to-haves met
+          </p>
+        )}
+        <PreferenceBadges preferences={preferences} className="mt-2" />
+        <p className="mt-3 text-xs text-neutral-600 dark:text-neutral-400">
+          {status} ·{" "}
+          <Link href="/profile/preferences" className="underline">
+            Adjust preferences
+          </Link>
+          {!hasProfile && (
+            <>
+              {" "}
+              ·{" "}
+              <Link href="/profile" className="underline">
+                Fill in your profile
+              </Link>{" "}
+              to check years, countries and relocation
+            </>
+          )}
+        </p>
+      </div>
+      <div className="flex w-28 shrink-0 flex-col items-end">
+        <span
+          className="text-3xl font-semibold tabular-nums"
+          data-testid="must-met"
+        >
+          {match.must.met}/{match.must.total}
+        </span>
+        <span className="text-xs text-neutral-500">must-haves met</span>
+      </div>
+    </section>
   );
 }

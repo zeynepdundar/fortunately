@@ -1,12 +1,16 @@
 import Link from "next/link";
 import type { ListedPosting } from "@/lib/criteria/postings-list";
+import {
+  BelowThresholdReasons,
+  matchDetail,
+  PreferenceBadges,
+} from "./match-summary";
 
 const WORK_MODE = {
   remote: "Remote",
   hybrid: "Hybrid",
   onsite: "On-site",
 } as const;
-const PREFERENCE_MARK = { match: "✓", mismatch: "✗", unknown: "?" } as const;
 
 /** One posting in the list: facts, must-have count, preference badges and the reasons behind its section. */
 export function PostingCard({ posting }: { posting: ListedPosting }) {
@@ -36,44 +40,16 @@ export function PostingCard({ posting }: { posting: ListedPosting }) {
         </p>
 
         <p className="mt-1.5 text-xs text-neutral-500 tabular-nums">
-          {match.matched
-            ? [
-                match.must.partial ? `${match.must.partial} partial` : null,
-                match.must.missing ? `${match.must.missing} missing` : null,
-                match.nice.total
-                  ? `nice-to-haves ${match.nice.met}/${match.nice.total}`
-                  : null,
-                match.yearsDetail,
-              ]
-                .filter(Boolean)
-                .join(" · ") || "Every must-have is proven by your CV"
-            : "Not matched against a CV"}
+          {matchDetail(match)}
         </p>
-
-        {evaluation.preferences.length > 0 && (
-          <ul
-            className="mt-2 flex flex-wrap gap-1.5"
-            aria-label="Your preferences"
-          >
-            {evaluation.preferences.map((p) => (
-              <li
-                key={p.id}
-                className="rounded-md px-1.5 py-0.5 text-xs text-neutral-700 ring-1 ring-neutral-300 ring-inset dark:text-neutral-300 dark:ring-neutral-700"
-              >
-                <span aria-hidden>{PREFERENCE_MARK[p.status]} </span>
-                {p.label}
-              </li>
-            ))}
-          </ul>
-        )}
-
-        {evaluation.belowThreshold.length > 0 && (
-          <ul className="mt-1.5 flex flex-col gap-0.5 text-xs text-neutral-600 dark:text-neutral-400">
-            {evaluation.belowThreshold.map((reason) => (
-              <li key={reason}>Below threshold: {reason}</li>
-            ))}
-          </ul>
-        )}
+        <PreferenceBadges
+          preferences={evaluation.preferences}
+          className="mt-2"
+        />
+        <BelowThresholdReasons
+          reasons={evaluation.belowThreshold}
+          className="mt-1.5"
+        />
       </div>
 
       <div className="flex w-24 shrink-0 flex-col items-end">

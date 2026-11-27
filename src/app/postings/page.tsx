@@ -7,7 +7,7 @@ import { isDbEnabled } from "@/db";
 import { DEFAULT_CRITERIA } from "@/lib/criteria/config";
 import {
   buildPostingList,
-  EMPTY_PROFILE,
+  toEngineProfile,
   type ListedPosting,
 } from "@/lib/criteria/postings-list";
 import { listLatestAnalyses } from "@/lib/persistence/postings";
@@ -104,16 +104,9 @@ async function PostingsLoader() {
     );
   }
 
-  const engineProfile = profile
-    ? {
-        yearsOfExperience: profile.yearsOfExperience,
-        targetCountries: profile.targetCountries,
-        relocationNeeded: profile.relocationNeeded,
-      }
-    : EMPTY_PROFILE;
   const list = buildPostingList(
     analyses,
-    engineProfile,
+    toEngineProfile(profile),
     criteria?.config ?? DEFAULT_CRITERIA,
   );
 

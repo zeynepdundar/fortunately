@@ -3,6 +3,7 @@ import { DEFAULT_CRITERIA } from "./config";
 import {
   buildPostingList,
   EMPTY_PROFILE,
+  toEngineProfile,
   type ListedAnalysis,
 } from "./postings-list";
 
@@ -84,5 +85,26 @@ describe("buildPostingList", () => {
     );
     expect(list.shown[0].verdicts.matched).toBe(false);
     expect(list.shown[0].evaluation.match.matched).toBe(false);
+  });
+});
+
+describe("toEngineProfile", () => {
+  it("falls back to the empty profile", () => {
+    expect(toEngineProfile(null)).toEqual(EMPTY_PROFILE);
+  });
+
+  it("keeps only the fields the engine reads", () => {
+    expect(
+      toEngineProfile({
+        yearsOfExperience: 6,
+        targetCountries: ["NL"],
+        relocationNeeded: true,
+        cv: null,
+      } as Parameters<typeof toEngineProfile>[0]),
+    ).toEqual({
+      yearsOfExperience: 6,
+      targetCountries: ["NL"],
+      relocationNeeded: true,
+    });
   });
 });

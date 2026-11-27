@@ -88,3 +88,18 @@ export const EMPTY_PROFILE: Profile = {
   targetCountries: [],
   relocationNeeded: false,
 };
+
+/** The engine's view of a stored profile; the empty profile when there is none. */
+export function toEngineProfile(
+  profile: Pick<
+    Profile,
+    "yearsOfExperience" | "targetCountries" | "relocationNeeded"
+  > | null,
+): Profile {
+  if (!profile) return EMPTY_PROFILE;
+  return {
+    yearsOfExperience: profile.yearsOfExperience,
+    targetCountries: profile.targetCountries,
+    relocationNeeded: profile.relocationNeeded,
+  };
+}
