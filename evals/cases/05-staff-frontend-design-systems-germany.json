@@ -1,0 +1,74 @@
+{
+  "id": "05-staff-frontend-design-systems-germany",
+  "role": "frontend",
+  "level": "staff",
+  "posting": "# Staff Frontend Engineer, Design Systems — Orbitale (fictional)\n\nOrbitale makes planning software for logistics companies. Remote within Germany, with a monthly team week in Munich.\n\n## Requirements\n\n- 8+ years of frontend engineering, including 3+ years at senior level.\n- Led a design system used by several product teams.\n- Expert in React, TypeScript and CSS.\n- Experience with Storybook and visual regression testing.\n- Mentoring other engineers.\n\n## Preferred\n\n- Contributions to open-source UI libraries.\n- Experience with web components.\n\nRelocation within Germany is supported.\n",
+  "gold": {
+    "facts": {
+      "title": "Staff Frontend Engineer, Design Systems",
+      "company": "Orbitale",
+      "country": "DE",
+      "city": "Munich",
+      "workMode": "remote",
+      "relocation": "yes"
+    },
+    "requirements": [
+      {
+        "text": "8+ years of frontend engineering, including 3+ years at senior level",
+        "kind": "must",
+        "category": "experience",
+        "skills": [],
+        "anyOf": false,
+        "minYears": 8
+      },
+      {
+        "text": "Led a design system used by several product teams",
+        "kind": "must",
+        "category": "experience",
+        "skills": [],
+        "anyOf": false,
+        "minYears": null
+      },
+      {
+        "text": "Expert in React, TypeScript and CSS",
+        "kind": "must",
+        "category": "technology",
+        "skills": ["react", "typescript", "css"],
+        "anyOf": false,
+        "minYears": null
+      },
+      {
+        "text": "Experience with Storybook and visual regression testing",
+        "kind": "must",
+        "category": "technology",
+        "skills": ["storybook"],
+        "anyOf": false,
+        "minYears": null
+      },
+      {
+        "text": "Mentoring other engineers",
+        "kind": "must",
+        "category": "soft_skill",
+        "skills": [],
+        "anyOf": false,
+        "minYears": null
+      },
+      {
+        "text": "Contributions to open-source UI libraries",
+        "kind": "nice",
+        "category": "experience",
+        "skills": [],
+        "anyOf": false,
+        "minYears": null
+      },
+      {
+        "text": "Experience with web components",
+        "kind": "nice",
+        "category": "technology",
+        "skills": ["web-components"],
+        "anyOf": false,
+        "minYears": null
+      }
+    ]
+  }
+}

@@ -1,0 +1,90 @@
+{
+  "id": "01-senior-frontend-remote-eu",
+  "role": "frontend",
+  "level": "senior",
+  "posting": "# Senior Frontend Engineer — Lumora Health (fictional)\n\nLumora Health builds scheduling software for physiotherapy clinics. Fully remote within the EU.\n\n## What you'll do\n\n- Own our patient-facing booking app.\n- Improve page performance across the product.\n\n## What you bring\n\n- 5+ years of frontend development.\n- Deep knowledge of React and TypeScript.\n- Experience with Next.js or Remix.\n- Accessibility (WCAG 2.1 AA) in production apps.\n- Testing with Playwright or Cypress.\n- Clear written communication.\n- Fluent English.\n\n## Nice to have\n\n- Experience in healthcare or other regulated domains.\n- GraphQL.\n\nWe do not offer relocation; you must already have the right to work in the EU.\n",
+  "gold": {
+    "facts": {
+      "title": "Senior Frontend Engineer",
+      "company": "Lumora Health",
+      "country": null,
+      "city": null,
+      "workMode": "remote",
+      "relocation": "no"
+    },
+    "requirements": [
+      {
+        "text": "5+ years of frontend development",
+        "kind": "must",
+        "category": "experience",
+        "skills": [],
+        "anyOf": false,
+        "minYears": 5
+      },
+      {
+        "text": "Deep knowledge of React and TypeScript",
+        "kind": "must",
+        "category": "technology",
+        "skills": ["react", "typescript"],
+        "anyOf": false,
+        "minYears": null
+      },
+      {
+        "text": "Experience with Next.js or Remix",
+        "kind": "must",
+        "category": "technology",
+        "skills": ["next-js", "remix"],
+        "anyOf": true,
+        "minYears": null
+      },
+      {
+        "text": "Accessibility (WCAG 2.1 AA) in production apps",
+        "kind": "must",
+        "category": "technology",
+        "skills": ["wcag"],
+        "anyOf": false,
+        "minYears": null
+      },
+      {
+        "text": "Testing with Playwright or Cypress",
+        "kind": "must",
+        "category": "technology",
+        "skills": ["playwright", "cypress"],
+        "anyOf": true,
+        "minYears": null
+      },
+      {
+        "text": "Clear written communication",
+        "kind": "must",
+        "category": "soft_skill",
+        "skills": [],
+        "anyOf": false,
+        "minYears": null
+      },
+      {
+        "text": "Fluent English",
+        "kind": "must",
+        "category": "other",
+        "skills": [],
+        "anyOf": false,
+        "minYears": null
+      },
+      {
+        "text": "Experience in healthcare or other regulated domains",
+        "kind": "nice",
+        "category": "domain",
+        "skills": [],
+        "anyOf": false,
+        "minYears": null
+      },
+      {
+        "text": "GraphQL",
+        "kind": "nice",
+        "category": "technology",
+        "skills": ["graphql"],
+        "anyOf": false,
+        "minYears": null
+      }
+    ]
+  }
+}

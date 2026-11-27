@@ -1,0 +1,82 @@
+{
+  "id": "02-react-native-london-onsite",
+  "role": "mobile",
+  "level": "mid",
+  "posting": "# React Native Developer — Tidewell (fictional)\n\nTidewell makes a budgeting app for students. London, on-site five days a week.\n\n## Responsibilities\n\n- Build new features for our mobile app.\n- Release through Fastlane and monitor crashes with Sentry.\n\n## Requirements\n\n- 3+ years of React Native.\n- TypeScript.\n- Redux Toolkit or Zustand for state management.\n- Experience publishing mobile apps to app stores.\n- Bachelor's degree in Computer Science or a related field.\n\n## Nice to have\n\n- Native modules in Swift or Kotlin.\n- Experience with fintech products.\n\nCandidates must already live in the UK; we cannot sponsor visas or relocation.\n",
+  "gold": {
+    "facts": {
+      "title": "React Native Developer",
+      "company": "Tidewell",
+      "country": "GB",
+      "city": "London",
+      "workMode": "onsite",
+      "relocation": "no"
+    },
+    "requirements": [
+      {
+        "text": "Release through Fastlane and monitor crashes with Sentry",
+        "kind": "nice",
+        "category": "technology",
+        "skills": ["fastlane", "sentry"],
+        "anyOf": false,
+        "minYears": null
+      },
+      {
+        "text": "3+ years of React Native",
+        "kind": "must",
+        "category": "technology",
+        "skills": ["react-native"],
+        "anyOf": false,
+        "minYears": 3
+      },
+      {
+        "text": "TypeScript",
+        "kind": "must",
+        "category": "technology",
+        "skills": ["typescript"],
+        "anyOf": false,
+        "minYears": null
+      },
+      {
+        "text": "Redux Toolkit or Zustand for state management",
+        "kind": "must",
+        "category": "technology",
+        "skills": ["redux-toolkit", "zustand"],
+        "anyOf": true,
+        "minYears": null
+      },
+      {
+        "text": "Experience publishing mobile apps to app stores",
+        "kind": "must",
+        "category": "experience",
+        "skills": [],
+        "anyOf": false,
+        "minYears": null
+      },
+      {
+        "text": "Bachelor's degree in Computer Science or a related field",
+        "kind": "must",
+        "category": "education",
+        "skills": [],
+        "anyOf": false,
+        "minYears": null
+      },
+      {
+        "text": "Native modules in Swift or Kotlin",
+        "kind": "nice",
+        "category": "technology",
+        "skills": ["swift", "kotlin"],
+        "anyOf": true,
+        "minYears": null
+      },
+      {
+        "text": "Experience with fintech products",
+        "kind": "nice",
+        "category": "domain",
+        "skills": [],
+        "anyOf": false,
+        "minYears": null
+      }
+    ]
+  }
+}

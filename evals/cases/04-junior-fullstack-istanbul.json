@@ -1,0 +1,82 @@
+{
+  "id": "04-junior-fullstack-istanbul",
+  "role": "full-stack",
+  "level": "junior",
+  "posting": "# Junior Full-stack Developer — Pelin Bilişim (fictional)\n\nWe build inventory software for small retailers. Istanbul, hybrid.\n\n## Requirements\n\n- 1+ years of experience with JavaScript.\n- Node.js and Express.\n- PostgreSQL or MySQL.\n- Git.\n- Willingness to learn and ask questions.\n\n## Nice to have\n\n- Vue.js.\n- Docker.\n- English at B2 level or higher.\n",
+  "gold": {
+    "facts": {
+      "title": "Junior Full-stack Developer",
+      "company": "Pelin Bilişim",
+      "country": "TR",
+      "city": "Istanbul",
+      "workMode": "hybrid",
+      "relocation": "not_stated"
+    },
+    "requirements": [
+      {
+        "text": "1+ years of experience with JavaScript",
+        "kind": "must",
+        "category": "technology",
+        "skills": ["javascript"],
+        "anyOf": false,
+        "minYears": 1
+      },
+      {
+        "text": "Node.js and Express",
+        "kind": "must",
+        "category": "technology",
+        "skills": ["node-js", "express"],
+        "anyOf": false,
+        "minYears": null
+      },
+      {
+        "text": "PostgreSQL or MySQL",
+        "kind": "must",
+        "category": "technology",
+        "skills": ["postgresql", "mysql"],
+        "anyOf": true,
+        "minYears": null
+      },
+      {
+        "text": "Git",
+        "kind": "must",
+        "category": "technology",
+        "skills": ["git"],
+        "anyOf": false,
+        "minYears": null
+      },
+      {
+        "text": "Willingness to learn and ask questions",
+        "kind": "must",
+        "category": "soft_skill",
+        "skills": [],
+        "anyOf": false,
+        "minYears": null
+      },
+      {
+        "text": "Vue.js",
+        "kind": "nice",
+        "category": "technology",
+        "skills": ["vue"],
+        "anyOf": false,
+        "minYears": null
+      },
+      {
+        "text": "Docker",
+        "kind": "nice",
+        "category": "technology",
+        "skills": ["docker"],
+        "anyOf": false,
+        "minYears": null
+      },
+      {
+        "text": "English at B2 level or higher",
+        "kind": "nice",
+        "category": "other",
+        "skills": [],
+        "anyOf": false,
+        "minYears": null
+      }
+    ]
+  }
+}

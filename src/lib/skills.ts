@@ -13,6 +13,10 @@ const ALIASES: Record<string, string> = {
   postgres: "postgresql",
   "github-action": "github-actions",
   "react-native-js": "react-native",
+  "vue-js": "vue",
+  vuejs: "vue",
+  "express-js": "express",
+  "ai-sdk": "vercel-ai-sdk",
 };
 
 /** Lowercase, kebab-case and alias-resolve a skill name. */

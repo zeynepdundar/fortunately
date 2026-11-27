@@ -1,0 +1,82 @@
+{
+  "id": "03-ai-engineer-amsterdam-relocation",
+  "role": "ai",
+  "level": "mid",
+  "posting": "# AI Engineer — Quillmark (fictional)\n\nQuillmark helps legal teams review contracts with language models. Amsterdam, hybrid (three days in the office).\n\n## You have\n\n- 4+ years of software engineering experience.\n- Python and TypeScript.\n- Experience building RAG pipelines with a vector database such as pgvector, Qdrant or Pinecone.\n- Experience designing evaluations for model outputs.\n- Ownership of features from idea to production.\n\n## Bonus\n\n- Knowledge of the legal domain.\n- Experience with the Vercel AI SDK.\n- Dutch is a plus.\n\nWe offer a relocation package and visa support for moving to Amsterdam.\n",
+  "gold": {
+    "facts": {
+      "title": "AI Engineer",
+      "company": "Quillmark",
+      "country": "NL",
+      "city": "Amsterdam",
+      "workMode": "hybrid",
+      "relocation": "yes"
+    },
+    "requirements": [
+      {
+        "text": "4+ years of software engineering experience",
+        "kind": "must",
+        "category": "experience",
+        "skills": [],
+        "anyOf": false,
+        "minYears": 4
+      },
+      {
+        "text": "Python and TypeScript",
+        "kind": "must",
+        "category": "technology",
+        "skills": ["python", "typescript"],
+        "anyOf": false,
+        "minYears": null
+      },
+      {
+        "text": "Experience building RAG pipelines with a vector database such as pgvector, Qdrant or Pinecone",
+        "kind": "must",
+        "category": "technology",
+        "skills": ["pgvector", "qdrant", "pinecone"],
+        "anyOf": true,
+        "minYears": null
+      },
+      {
+        "text": "Experience designing evaluations for model outputs",
+        "kind": "must",
+        "category": "experience",
+        "skills": [],
+        "anyOf": false,
+        "minYears": null
+      },
+      {
+        "text": "Ownership of features from idea to production",
+        "kind": "must",
+        "category": "soft_skill",
+        "skills": [],
+        "anyOf": false,
+        "minYears": null
+      },
+      {
+        "text": "Knowledge of the legal domain",
+        "kind": "nice",
+        "category": "domain",
+        "skills": [],
+        "anyOf": false,
+        "minYears": null
+      },
+      {
+        "text": "Experience with the Vercel AI SDK",
+        "kind": "nice",
+        "category": "technology",
+        "skills": ["vercel-ai-sdk"],
+        "anyOf": false,
+        "minYears": null
+      },
+      {
+        "text": "Dutch is a plus",
+        "kind": "nice",
+        "category": "other",
+        "skills": [],
+        "anyOf": false,
+        "minYears": null
+      }
+    ]
+  }
+}
