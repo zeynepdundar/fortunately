@@ -1,0 +1,66 @@
+{
+  "id": "17-graduate-frontend-madrid",
+  "role": "frontend",
+  "level": "junior",
+  "posting": "# Graduate Frontend Developer — Solera Studio (fictional)\n\nSolera Studio builds websites for museums. Madrid, on-site.\n\n## About you\n\n- A degree in computer science, design or a related field.\n- JavaScript, HTML and CSS.\n- A portfolio of web projects.\n- Fluent Spanish.\n\n## Extra points\n\n- Experience with Svelte.\n- Interest in arts and culture.\n",
+  "gold": {
+    "facts": {
+      "title": "Graduate Frontend Developer",
+      "company": "Solera Studio",
+      "country": "ES",
+      "city": "Madrid",
+      "workMode": "onsite",
+      "relocation": "not_stated"
+    },
+    "requirements": [
+      {
+        "text": "A degree in computer science, design or a related field",
+        "kind": "must",
+        "category": "education",
+        "skills": [],
+        "anyOf": false,
+        "minYears": null
+      },
+      {
+        "text": "JavaScript, HTML and CSS",
+        "kind": "must",
+        "category": "technology",
+        "skills": ["javascript", "html", "css"],
+        "anyOf": false,
+        "minYears": null
+      },
+      {
+        "text": "A portfolio of web projects",
+        "kind": "must",
+        "category": "experience",
+        "skills": [],
+        "anyOf": false,
+        "minYears": null
+      },
+      {
+        "text": "Fluent Spanish",
+        "kind": "must",
+        "category": "other",
+        "skills": [],
+        "anyOf": false,
+        "minYears": null
+      },
+      {
+        "text": "Experience with Svelte",
+        "kind": "nice",
+        "category": "technology",
+        "skills": ["svelte"],
+        "anyOf": false,
+        "minYears": null
+      },
+      {
+        "text": "Interest in arts and culture",
+        "kind": "nice",
+        "category": "domain",
+        "skills": [],
+        "anyOf": false,
+        "minYears": null
+      }
+    ]
+  }
+}

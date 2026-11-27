@@ -1,0 +1,66 @@
+{
+  "id": "11-junior-frontend-warsaw-prose",
+  "role": "frontend",
+  "level": "junior",
+  "posting": "# Junior Frontend Developer — Kawka Labs (fictional)\n\nKawka Labs makes online ordering for independent coffee shops. Warsaw, hybrid.\n\nWe are looking for someone with at least 1 year of experience in JavaScript and React. You know HTML and CSS well. Familiarity with Git is required. Knowledge of Tailwind CSS is a plus. Experience with Next.js is also a plus. You speak Polish and English.\n",
+  "gold": {
+    "facts": {
+      "title": "Junior Frontend Developer",
+      "company": "Kawka Labs",
+      "country": "PL",
+      "city": "Warsaw",
+      "workMode": "hybrid",
+      "relocation": "not_stated"
+    },
+    "requirements": [
+      {
+        "text": "at least 1 year of experience in JavaScript and React",
+        "kind": "must",
+        "category": "technology",
+        "skills": ["javascript", "react"],
+        "anyOf": false,
+        "minYears": 1
+      },
+      {
+        "text": "You know HTML and CSS well",
+        "kind": "must",
+        "category": "technology",
+        "skills": ["html", "css"],
+        "anyOf": false,
+        "minYears": null
+      },
+      {
+        "text": "Familiarity with Git is required",
+        "kind": "must",
+        "category": "technology",
+        "skills": ["git"],
+        "anyOf": false,
+        "minYears": null
+      },
+      {
+        "text": "Knowledge of Tailwind CSS is a plus",
+        "kind": "nice",
+        "category": "technology",
+        "skills": ["tailwind-css"],
+        "anyOf": false,
+        "minYears": null
+      },
+      {
+        "text": "Experience with Next.js is also a plus",
+        "kind": "nice",
+        "category": "technology",
+        "skills": ["next-js"],
+        "anyOf": false,
+        "minYears": null
+      },
+      {
+        "text": "You speak Polish and English",
+        "kind": "must",
+        "category": "other",
+        "skills": [],
+        "anyOf": false,
+        "minYears": null
+      }
+    ]
+  }
+}

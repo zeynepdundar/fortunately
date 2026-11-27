@@ -1,0 +1,66 @@
+{
+  "id": "10-senior-ml-zurich",
+  "role": "ai",
+  "level": "senior",
+  "posting": "# Senior Machine Learning Engineer — Alpenreach (fictional)\n\nAlpenreach forecasts energy demand for Swiss utilities. Zurich, on-site.\n\n## Requirements\n\n- MSc or PhD in machine learning, statistics or a related field.\n- 5+ years of applied machine learning.\n- Python, PyTorch and scikit-learn.\n- Time-series forecasting.\n- Experience deploying models with Docker and Airflow.\n- German is a plus.\n",
+  "gold": {
+    "facts": {
+      "title": "Senior Machine Learning Engineer",
+      "company": "Alpenreach",
+      "country": "CH",
+      "city": "Zurich",
+      "workMode": "onsite",
+      "relocation": "not_stated"
+    },
+    "requirements": [
+      {
+        "text": "MSc or PhD in machine learning, statistics or a related field",
+        "kind": "must",
+        "category": "education",
+        "skills": [],
+        "anyOf": false,
+        "minYears": null
+      },
+      {
+        "text": "5+ years of applied machine learning",
+        "kind": "must",
+        "category": "experience",
+        "skills": [],
+        "anyOf": false,
+        "minYears": 5
+      },
+      {
+        "text": "Python, PyTorch and scikit-learn",
+        "kind": "must",
+        "category": "technology",
+        "skills": ["python", "pytorch", "scikit-learn"],
+        "anyOf": false,
+        "minYears": null
+      },
+      {
+        "text": "Time-series forecasting",
+        "kind": "must",
+        "category": "domain",
+        "skills": [],
+        "anyOf": false,
+        "minYears": null
+      },
+      {
+        "text": "Experience deploying models with Docker and Airflow",
+        "kind": "must",
+        "category": "technology",
+        "skills": ["docker", "airflow"],
+        "anyOf": false,
+        "minYears": null
+      },
+      {
+        "text": "German is a plus",
+        "kind": "nice",
+        "category": "other",
+        "skills": [],
+        "anyOf": false,
+        "minYears": null
+      }
+    ]
+  }
+}

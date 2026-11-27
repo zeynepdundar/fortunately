@@ -1,0 +1,82 @@
+{
+  "id": "15-senior-frontend-remote-netherlands",
+  "role": "frontend",
+  "level": "senior",
+  "posting": "# Senior Frontend Engineer — Tulipa Energy (fictional)\n\nTulipa Energy helps households track their solar panels. Remote within the Netherlands.\n\n## Requirements\n\n- 6+ years of frontend experience.\n- React and TypeScript.\n- Data visualisation with D3 or a similar library.\n- Experience with Vite, webpack or Turbopack.\n- You can explain technical trade-offs to non-engineers.\n\n## Nice to have\n\n- Experience in the energy sector.\n- React Native.\n- Dutch.\n",
+  "gold": {
+    "facts": {
+      "title": "Senior Frontend Engineer",
+      "company": "Tulipa Energy",
+      "country": "NL",
+      "city": null,
+      "workMode": "remote",
+      "relocation": "not_stated"
+    },
+    "requirements": [
+      {
+        "text": "6+ years of frontend experience",
+        "kind": "must",
+        "category": "experience",
+        "skills": [],
+        "anyOf": false,
+        "minYears": 6
+      },
+      {
+        "text": "React and TypeScript",
+        "kind": "must",
+        "category": "technology",
+        "skills": ["react", "typescript"],
+        "anyOf": false,
+        "minYears": null
+      },
+      {
+        "text": "Data visualisation with D3 or a similar library",
+        "kind": "must",
+        "category": "technology",
+        "skills": ["d3"],
+        "anyOf": false,
+        "minYears": null
+      },
+      {
+        "text": "Experience with Vite, webpack or Turbopack",
+        "kind": "must",
+        "category": "technology",
+        "skills": ["vite", "webpack", "turbopack"],
+        "anyOf": true,
+        "minYears": null
+      },
+      {
+        "text": "You can explain technical trade-offs to non-engineers",
+        "kind": "must",
+        "category": "soft_skill",
+        "skills": [],
+        "anyOf": false,
+        "minYears": null
+      },
+      {
+        "text": "Experience in the energy sector",
+        "kind": "nice",
+        "category": "domain",
+        "skills": [],
+        "anyOf": false,
+        "minYears": null
+      },
+      {
+        "text": "React Native",
+        "kind": "nice",
+        "category": "technology",
+        "skills": ["react-native"],
+        "anyOf": false,
+        "minYears": null
+      },
+      {
+        "text": "Dutch",
+        "kind": "nice",
+        "category": "other",
+        "skills": [],
+        "anyOf": false,
+        "minYears": null
+      }
+    ]
+  }
+}

@@ -1,6 +1,6 @@
 /** Headings that introduce nice-to-have requirements. */
 const NICE_HEADING =
-  /\b(nice[\s-]to[\s-]haves?|bonus(?: points)?|preferred(?: qualifications| skills)?|should have|pluses|good to have)\b/i;
+  /\b(nice[\s-]to[\s-]haves?|bonus(?: points)?|preferred(?: qualifications| skills)?|should have|plus(?:es)?|good to have)\b/i;
 
 const BULLET = /^\s*(?:[-*•]|\d+[.)])\s+\S/;
 

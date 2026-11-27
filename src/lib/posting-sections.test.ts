@@ -26,6 +26,12 @@ describe("niceSections", () => {
     ]);
   });
 
+  it("treats a Plus heading as nice-to-have", () => {
+    expect(niceSections("## Plus\n- Docker")).toEqual([
+      { heading: "Plus", lines: 1 },
+    ]);
+  });
+
   it("ignores postings without such a section", () => {
     expect(niceSections("## Requirements\n- Go\n- Rust")).toEqual([]);
     expect(niceSectionHint("## Requirements\n- Go")).toBe("");

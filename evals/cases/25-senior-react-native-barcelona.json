@@ -1,0 +1,82 @@
+{
+  "id": "25-senior-react-native-barcelona",
+  "role": "mobile",
+  "level": "senior",
+  "posting": "# Senior React Native Engineer — Cala Pagos (fictional)\n\nCala Pagos builds a payments app for freelancers. Barcelona, hybrid.\n\n## What you'll do\n\n- Lead the mobile app's architecture.\n- Set up feature flags with LaunchDarkly.\n\n## What we're looking for\n\n- 4-6 years of mobile development.\n- React Native and TypeScript.\n- Experience with Expo.\n- Offline-first data sync.\n- Experience with payments or banking apps.\n\n## Nice to have\n\n- Native iOS or Android experience.\n- Spanish or Catalan.\n\nWe offer a relocation package for moving to Barcelona.\n",
+  "gold": {
+    "facts": {
+      "title": "Senior React Native Engineer",
+      "company": "Cala Pagos",
+      "country": "ES",
+      "city": "Barcelona",
+      "workMode": "hybrid",
+      "relocation": "yes"
+    },
+    "requirements": [
+      {
+        "text": "Set up feature flags with LaunchDarkly",
+        "kind": "nice",
+        "category": "technology",
+        "skills": ["launchdarkly"],
+        "anyOf": false,
+        "minYears": null
+      },
+      {
+        "text": "4-6 years of mobile development",
+        "kind": "must",
+        "category": "experience",
+        "skills": [],
+        "anyOf": false,
+        "minYears": 4
+      },
+      {
+        "text": "React Native and TypeScript",
+        "kind": "must",
+        "category": "technology",
+        "skills": ["react-native", "typescript"],
+        "anyOf": false,
+        "minYears": null
+      },
+      {
+        "text": "Experience with Expo",
+        "kind": "must",
+        "category": "technology",
+        "skills": ["expo"],
+        "anyOf": false,
+        "minYears": null
+      },
+      {
+        "text": "Offline-first data sync",
+        "kind": "must",
+        "category": "experience",
+        "skills": [],
+        "anyOf": false,
+        "minYears": null
+      },
+      {
+        "text": "Experience with payments or banking apps",
+        "kind": "must",
+        "category": "domain",
+        "skills": [],
+        "anyOf": false,
+        "minYears": null
+      },
+      {
+        "text": "Native iOS or Android experience",
+        "kind": "nice",
+        "category": "technology",
+        "skills": ["ios", "android"],
+        "anyOf": true,
+        "minYears": null
+      },
+      {
+        "text": "Spanish or Catalan",
+        "kind": "nice",
+        "category": "other",
+        "skills": [],
+        "anyOf": false,
+        "minYears": null
+      }
+    ]
+  }
+}

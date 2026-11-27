@@ -1,0 +1,82 @@
+{
+  "id": "07-frontend-angular-lisbon",
+  "role": "frontend",
+  "level": "mid",
+  "posting": "# Frontend Developer — Marisol Travel (fictional)\n\nMarisol Travel sells boutique hotel stays across Southern Europe. Lisbon, on-site.\n\n**Your day-to-day**\n- Build booking flows in Angular.\n- Write end-to-end tests with Cypress.\n\n**What we need from you**\n- 3+ years of experience with Angular.\n- RxJS.\n- HTML, CSS and SCSS.\n- Experience working with designers in Figma.\n- Good spoken and written English.\n\n**Bonus points**\n- Portuguese or Spanish.\n- Experience in travel or hospitality.\n",
+  "gold": {
+    "facts": {
+      "title": "Frontend Developer",
+      "company": "Marisol Travel",
+      "country": "PT",
+      "city": "Lisbon",
+      "workMode": "onsite",
+      "relocation": "not_stated"
+    },
+    "requirements": [
+      {
+        "text": "Write end-to-end tests with Cypress",
+        "kind": "nice",
+        "category": "technology",
+        "skills": ["cypress"],
+        "anyOf": false,
+        "minYears": null
+      },
+      {
+        "text": "3+ years of experience with Angular",
+        "kind": "must",
+        "category": "technology",
+        "skills": ["angular"],
+        "anyOf": false,
+        "minYears": 3
+      },
+      {
+        "text": "RxJS",
+        "kind": "must",
+        "category": "technology",
+        "skills": ["rxjs"],
+        "anyOf": false,
+        "minYears": null
+      },
+      {
+        "text": "HTML, CSS and SCSS",
+        "kind": "must",
+        "category": "technology",
+        "skills": ["html", "css", "scss"],
+        "anyOf": false,
+        "minYears": null
+      },
+      {
+        "text": "Experience working with designers in Figma",
+        "kind": "must",
+        "category": "technology",
+        "skills": ["figma"],
+        "anyOf": false,
+        "minYears": null
+      },
+      {
+        "text": "Good spoken and written English",
+        "kind": "must",
+        "category": "other",
+        "skills": [],
+        "anyOf": false,
+        "minYears": null
+      },
+      {
+        "text": "Portuguese or Spanish",
+        "kind": "nice",
+        "category": "other",
+        "skills": [],
+        "anyOf": false,
+        "minYears": null
+      },
+      {
+        "text": "Experience in travel or hospitality",
+        "kind": "nice",
+        "category": "domain",
+        "skills": [],
+        "anyOf": false,
+        "minYears": null
+      }
+    ]
+  }
+}

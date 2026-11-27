@@ -1,0 +1,74 @@
+{
+  "id": "14-ai-engineer-austin",
+  "role": "ai",
+  "level": "mid",
+  "posting": "# AI Engineer — Brightquarry (fictional)\n\nBrightquarry builds search for construction project documents. Austin, Texas, hybrid.\n\n## What you'll need\n\n- 2+ years of Python.\n- Experience calling LLM APIs and parsing structured output.\n- Prompt engineering and building evaluation sets.\n- FastAPI.\n- SQL.\n\n## Bonus\n\n- Experience with LangChain or LlamaIndex.\n- TypeScript.\n\nRelocation is not available for this role.\n",
+  "gold": {
+    "facts": {
+      "title": "AI Engineer",
+      "company": "Brightquarry",
+      "country": "US",
+      "city": "Austin",
+      "workMode": "hybrid",
+      "relocation": "no"
+    },
+    "requirements": [
+      {
+        "text": "2+ years of Python",
+        "kind": "must",
+        "category": "technology",
+        "skills": ["python"],
+        "anyOf": false,
+        "minYears": 2
+      },
+      {
+        "text": "Experience calling LLM APIs and parsing structured output",
+        "kind": "must",
+        "category": "experience",
+        "skills": [],
+        "anyOf": false,
+        "minYears": null
+      },
+      {
+        "text": "Prompt engineering and building evaluation sets",
+        "kind": "must",
+        "category": "experience",
+        "skills": [],
+        "anyOf": false,
+        "minYears": null
+      },
+      {
+        "text": "FastAPI",
+        "kind": "must",
+        "category": "technology",
+        "skills": ["fastapi"],
+        "anyOf": false,
+        "minYears": null
+      },
+      {
+        "text": "SQL",
+        "kind": "must",
+        "category": "technology",
+        "skills": ["sql"],
+        "anyOf": false,
+        "minYears": null
+      },
+      {
+        "text": "Experience with LangChain or LlamaIndex",
+        "kind": "nice",
+        "category": "technology",
+        "skills": ["langchain", "llamaindex"],
+        "anyOf": true,
+        "minYears": null
+      },
+      {
+        "text": "TypeScript",
+        "kind": "nice",
+        "category": "technology",
+        "skills": ["typescript"],
+        "anyOf": false,
+        "minYears": null
+      }
+    ]
+  }
+}

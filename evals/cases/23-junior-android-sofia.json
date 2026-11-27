@@ -1,0 +1,66 @@
+{
+  "id": "23-junior-android-sofia",
+  "role": "mobile",
+  "level": "junior",
+  "posting": "# Junior Android Developer — Rila Fitness (fictional)\n\nRila Fitness makes a workout tracking app. Sofia, on-site.\n\n## Requirements\n\n- 1+ years of Android development with Kotlin.\n- Jetpack Compose.\n- REST APIs and JSON.\n- Git and code reviews.\n\n## Nice to have\n\n- Experience with Wear OS.\n- Interest in sports and fitness.\n",
+  "gold": {
+    "facts": {
+      "title": "Junior Android Developer",
+      "company": "Rila Fitness",
+      "country": "BG",
+      "city": "Sofia",
+      "workMode": "onsite",
+      "relocation": "not_stated"
+    },
+    "requirements": [
+      {
+        "text": "1+ years of Android development with Kotlin",
+        "kind": "must",
+        "category": "technology",
+        "skills": ["android", "kotlin"],
+        "anyOf": false,
+        "minYears": 1
+      },
+      {
+        "text": "Jetpack Compose",
+        "kind": "must",
+        "category": "technology",
+        "skills": ["jetpack-compose"],
+        "anyOf": false,
+        "minYears": null
+      },
+      {
+        "text": "REST APIs and JSON",
+        "kind": "must",
+        "category": "technology",
+        "skills": ["rest", "json"],
+        "anyOf": false,
+        "minYears": null
+      },
+      {
+        "text": "Git and code reviews",
+        "kind": "must",
+        "category": "technology",
+        "skills": ["git"],
+        "anyOf": false,
+        "minYears": null
+      },
+      {
+        "text": "Experience with Wear OS",
+        "kind": "nice",
+        "category": "technology",
+        "skills": ["wear-os"],
+        "anyOf": false,
+        "minYears": null
+      },
+      {
+        "text": "Interest in sports and fitness",
+        "kind": "nice",
+        "category": "domain",
+        "skills": [],
+        "anyOf": false,
+        "minYears": null
+      }
+    ]
+  }
+}

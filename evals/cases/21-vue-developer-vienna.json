@@ -1,0 +1,66 @@
+{
+  "id": "21-vue-developer-vienna",
+  "role": "frontend",
+  "level": "mid",
+  "posting": "# Vue.js Developer — Donauwerk Media (fictional)\n\nDonauwerk Media publishes regional news sites. Vienna, hybrid.\n\n## Must-haves\n\n- 3+ years of Vue.js.\n- Nuxt.\n- Server-side rendering and SEO.\n- Web performance optimisation.\n\n## Nice-to-haves\n\n- Experience with headless CMSs such as Storyblok or Contentful.\n- German.\n",
+  "gold": {
+    "facts": {
+      "title": "Vue.js Developer",
+      "company": "Donauwerk Media",
+      "country": "AT",
+      "city": "Vienna",
+      "workMode": "hybrid",
+      "relocation": "not_stated"
+    },
+    "requirements": [
+      {
+        "text": "3+ years of Vue.js",
+        "kind": "must",
+        "category": "technology",
+        "skills": ["vue"],
+        "anyOf": false,
+        "minYears": 3
+      },
+      {
+        "text": "Nuxt",
+        "kind": "must",
+        "category": "technology",
+        "skills": ["nuxt"],
+        "anyOf": false,
+        "minYears": null
+      },
+      {
+        "text": "Server-side rendering and SEO",
+        "kind": "must",
+        "category": "domain",
+        "skills": [],
+        "anyOf": false,
+        "minYears": null
+      },
+      {
+        "text": "Web performance optimisation",
+        "kind": "must",
+        "category": "domain",
+        "skills": [],
+        "anyOf": false,
+        "minYears": null
+      },
+      {
+        "text": "Experience with headless CMSs such as Storyblok or Contentful",
+        "kind": "nice",
+        "category": "technology",
+        "skills": ["storyblok", "contentful"],
+        "anyOf": true,
+        "minYears": null
+      },
+      {
+        "text": "German",
+        "kind": "nice",
+        "category": "other",
+        "skills": [],
+        "anyOf": false,
+        "minYears": null
+      }
+    ]
+  }
+}

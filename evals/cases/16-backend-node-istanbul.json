@@ -1,0 +1,74 @@
+{
+  "id": "16-backend-node-istanbul",
+  "role": "backend",
+  "level": "mid",
+  "posting": "# Backend Developer (Node.js) — Lale Mobility (fictional)\n\nLale Mobility runs an e-scooter sharing app. Istanbul, hybrid.\n\n## Requirements\n\n- 3+ years of Node.js.\n- NestJS or Express.\n- MongoDB.\n- Message queues such as RabbitMQ.\n- Writing integration tests.\n\n## Nice to have\n\n- Experience with geospatial data.\n- Turkish.\n\nWe provide relocation support for candidates moving to Istanbul.\n",
+  "gold": {
+    "facts": {
+      "title": "Backend Developer (Node.js)",
+      "company": "Lale Mobility",
+      "country": "TR",
+      "city": "Istanbul",
+      "workMode": "hybrid",
+      "relocation": "yes"
+    },
+    "requirements": [
+      {
+        "text": "3+ years of Node.js",
+        "kind": "must",
+        "category": "technology",
+        "skills": ["node-js"],
+        "anyOf": false,
+        "minYears": 3
+      },
+      {
+        "text": "NestJS or Express",
+        "kind": "must",
+        "category": "technology",
+        "skills": ["nestjs", "express"],
+        "anyOf": true,
+        "minYears": null
+      },
+      {
+        "text": "MongoDB",
+        "kind": "must",
+        "category": "technology",
+        "skills": ["mongodb"],
+        "anyOf": false,
+        "minYears": null
+      },
+      {
+        "text": "Message queues such as RabbitMQ",
+        "kind": "must",
+        "category": "technology",
+        "skills": ["rabbitmq"],
+        "anyOf": false,
+        "minYears": null
+      },
+      {
+        "text": "Writing integration tests",
+        "kind": "must",
+        "category": "experience",
+        "skills": [],
+        "anyOf": false,
+        "minYears": null
+      },
+      {
+        "text": "Experience with geospatial data",
+        "kind": "nice",
+        "category": "domain",
+        "skills": [],
+        "anyOf": false,
+        "minYears": null
+      },
+      {
+        "text": "Turkish",
+        "kind": "nice",
+        "category": "other",
+        "skills": [],
+        "anyOf": false,
+        "minYears": null
+      }
+    ]
+  }
+}

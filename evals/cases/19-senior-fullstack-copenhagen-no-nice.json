@@ -1,0 +1,74 @@
+{
+  "id": "19-senior-fullstack-copenhagen-no-nice",
+  "role": "full-stack",
+  "level": "senior",
+  "posting": "# Senior Full-stack Engineer — Havbro Insurance (fictional)\n\nHavbro Insurance sells home insurance online. Copenhagen, hybrid.\n\n## The role\n\n- Build customer-facing features end to end.\n- Run our services on Azure.\n\n## Requirements\n\n- 5+ years of full-stack development.\n- Python and Django.\n- React.\n- Strong SQL skills.\n- Experience with insurance or financial products.\n- Danish or English at a professional level.\n",
+  "gold": {
+    "facts": {
+      "title": "Senior Full-stack Engineer",
+      "company": "Havbro Insurance",
+      "country": "DK",
+      "city": "Copenhagen",
+      "workMode": "hybrid",
+      "relocation": "not_stated"
+    },
+    "requirements": [
+      {
+        "text": "Run our services on Azure",
+        "kind": "nice",
+        "category": "technology",
+        "skills": ["azure"],
+        "anyOf": false,
+        "minYears": null
+      },
+      {
+        "text": "5+ years of full-stack development",
+        "kind": "must",
+        "category": "experience",
+        "skills": [],
+        "anyOf": false,
+        "minYears": 5
+      },
+      {
+        "text": "Python and Django",
+        "kind": "must",
+        "category": "technology",
+        "skills": ["python", "django"],
+        "anyOf": false,
+        "minYears": null
+      },
+      {
+        "text": "React",
+        "kind": "must",
+        "category": "technology",
+        "skills": ["react"],
+        "anyOf": false,
+        "minYears": null
+      },
+      {
+        "text": "SQL skills",
+        "kind": "must",
+        "category": "technology",
+        "skills": ["sql"],
+        "anyOf": false,
+        "minYears": null
+      },
+      {
+        "text": "Experience with insurance or financial products",
+        "kind": "must",
+        "category": "domain",
+        "skills": [],
+        "anyOf": false,
+        "minYears": null
+      },
+      {
+        "text": "Danish or English at a professional level",
+        "kind": "must",
+        "category": "other",
+        "skills": [],
+        "anyOf": false,
+        "minYears": null
+      }
+    ]
+  }
+}

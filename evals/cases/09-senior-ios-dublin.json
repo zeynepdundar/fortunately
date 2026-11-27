@@ -1,0 +1,74 @@
+{
+  "id": "09-senior-ios-dublin",
+  "role": "mobile",
+  "level": "senior",
+  "posting": "# Senior iOS Engineer — Harbourlight Health (fictional)\n\nHarbourlight Health builds a medication reminder app used by pharmacies. Dublin, hybrid (2 days a week in the office).\n\nWhat you bring:\n1. 6+ years of iOS development.\n2. Swift and SwiftUI.\n3. Experience with Core Data or Realm.\n4. Unit and UI testing with XCTest.\n5. Experience shipping apps in a regulated industry.\n\nGood to have:\n1. Kotlin Multiplatform.\n2. Accessibility for VoiceOver users.\n\nWe sponsor work permits and help with relocation to Ireland.\n",
+  "gold": {
+    "facts": {
+      "title": "Senior iOS Engineer",
+      "company": "Harbourlight Health",
+      "country": "IE",
+      "city": "Dublin",
+      "workMode": "hybrid",
+      "relocation": "yes"
+    },
+    "requirements": [
+      {
+        "text": "6+ years of iOS development",
+        "kind": "must",
+        "category": "technology",
+        "skills": ["ios"],
+        "anyOf": false,
+        "minYears": 6
+      },
+      {
+        "text": "Swift and SwiftUI",
+        "kind": "must",
+        "category": "technology",
+        "skills": ["swift", "swiftui"],
+        "anyOf": false,
+        "minYears": null
+      },
+      {
+        "text": "Experience with Core Data or Realm",
+        "kind": "must",
+        "category": "technology",
+        "skills": ["core-data", "realm"],
+        "anyOf": true,
+        "minYears": null
+      },
+      {
+        "text": "Unit and UI testing with XCTest",
+        "kind": "must",
+        "category": "technology",
+        "skills": ["xctest"],
+        "anyOf": false,
+        "minYears": null
+      },
+      {
+        "text": "Experience shipping apps in a regulated industry",
+        "kind": "must",
+        "category": "domain",
+        "skills": [],
+        "anyOf": false,
+        "minYears": null
+      },
+      {
+        "text": "Kotlin Multiplatform",
+        "kind": "nice",
+        "category": "technology",
+        "skills": ["kotlin-multiplatform"],
+        "anyOf": false,
+        "minYears": null
+      },
+      {
+        "text": "Accessibility for VoiceOver users",
+        "kind": "nice",
+        "category": "technology",
+        "skills": ["voiceover"],
+        "anyOf": false,
+        "minYears": null
+      }
+    ]
+  }
+}

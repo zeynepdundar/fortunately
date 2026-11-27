@@ -1,0 +1,74 @@
+{
+  "id": "18-flutter-helsinki",
+  "role": "mobile",
+  "level": "mid",
+  "posting": "# Flutter Developer — Revontuli Games (fictional)\n\nRevontuli Games makes casual puzzle games. Helsinki, hybrid.\n\n## You have\n\n- 3+ years of mobile development, including 2+ years with Flutter.\n- Dart.\n- State management with Bloc or Riverpod.\n- Experience with Firebase.\n- Published at least one app to the App Store or Google Play.\n\n## Preferred\n\n- Experience with game analytics.\n- Unity.\n\nWe help with visas and moving costs.\n",
+  "gold": {
+    "facts": {
+      "title": "Flutter Developer",
+      "company": "Revontuli Games",
+      "country": "FI",
+      "city": "Helsinki",
+      "workMode": "hybrid",
+      "relocation": "yes"
+    },
+    "requirements": [
+      {
+        "text": "3+ years of mobile development, including 2+ years with Flutter",
+        "kind": "must",
+        "category": "technology",
+        "skills": ["flutter"],
+        "anyOf": false,
+        "minYears": 3
+      },
+      {
+        "text": "Dart",
+        "kind": "must",
+        "category": "technology",
+        "skills": ["dart"],
+        "anyOf": false,
+        "minYears": null
+      },
+      {
+        "text": "State management with Bloc or Riverpod",
+        "kind": "must",
+        "category": "technology",
+        "skills": ["bloc", "riverpod"],
+        "anyOf": true,
+        "minYears": null
+      },
+      {
+        "text": "Experience with Firebase",
+        "kind": "must",
+        "category": "technology",
+        "skills": ["firebase"],
+        "anyOf": false,
+        "minYears": null
+      },
+      {
+        "text": "Published at least one app to the App Store or Google Play",
+        "kind": "must",
+        "category": "experience",
+        "skills": [],
+        "anyOf": false,
+        "minYears": null
+      },
+      {
+        "text": "Experience with game analytics",
+        "kind": "nice",
+        "category": "domain",
+        "skills": [],
+        "anyOf": false,
+        "minYears": null
+      },
+      {
+        "text": "Unity",
+        "kind": "nice",
+        "category": "technology",
+        "skills": ["unity"],
+        "anyOf": false,
+        "minYears": null
+      }
+    ]
+  }
+}

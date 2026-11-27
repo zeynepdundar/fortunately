@@ -1,0 +1,74 @@
+{
+  "id": "12-staff-platform-toronto",
+  "role": "backend",
+  "level": "staff",
+  "posting": "# Staff Software Engineer, Platform — Northpine Logistics (fictional)\n\nNorthpine Logistics routes freight across North America. Toronto, hybrid (Tuesday to Thursday in the office).\n\n## Must have\n\n- 10+ years of software engineering, with 3+ years as a tech lead.\n- Java or Kotlin on the JVM.\n- Designing distributed systems at scale.\n- Apache Kafka.\n- Mentoring and growing senior engineers.\n\n## Should have\n\n- Experience with GCP.\n- Knowledge of the logistics or supply-chain domain.\n\nWe support relocation to Toronto from elsewhere in Canada.\n",
+  "gold": {
+    "facts": {
+      "title": "Staff Software Engineer, Platform",
+      "company": "Northpine Logistics",
+      "country": "CA",
+      "city": "Toronto",
+      "workMode": "hybrid",
+      "relocation": "yes"
+    },
+    "requirements": [
+      {
+        "text": "10+ years of software engineering, with 3+ years as a tech lead",
+        "kind": "must",
+        "category": "experience",
+        "skills": [],
+        "anyOf": false,
+        "minYears": 10
+      },
+      {
+        "text": "Java or Kotlin on the JVM",
+        "kind": "must",
+        "category": "technology",
+        "skills": ["java", "kotlin"],
+        "anyOf": true,
+        "minYears": null
+      },
+      {
+        "text": "Designing distributed systems at scale",
+        "kind": "must",
+        "category": "experience",
+        "skills": [],
+        "anyOf": false,
+        "minYears": null
+      },
+      {
+        "text": "Apache Kafka",
+        "kind": "must",
+        "category": "technology",
+        "skills": ["kafka"],
+        "anyOf": false,
+        "minYears": null
+      },
+      {
+        "text": "Mentoring and growing senior engineers",
+        "kind": "must",
+        "category": "soft_skill",
+        "skills": [],
+        "anyOf": false,
+        "minYears": null
+      },
+      {
+        "text": "Experience with GCP",
+        "kind": "nice",
+        "category": "technology",
+        "skills": ["gcp"],
+        "anyOf": false,
+        "minYears": null
+      },
+      {
+        "text": "Knowledge of the logistics or supply-chain domain",
+        "kind": "nice",
+        "category": "domain",
+        "skills": [],
+        "anyOf": false,
+        "minYears": null
+      }
+    ]
+  }
+}

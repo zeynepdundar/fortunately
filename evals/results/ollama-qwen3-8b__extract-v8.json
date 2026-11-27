@@ -3,30 +3,30 @@
   "model": "qwen3:8b",
   "promptVersion": "extract-v8",
   "thinking": false,
-  "date": "2026-11-27T11:23:44.322Z",
+  "date": "2026-11-27T11:53:05.199Z",
   "failures": 0,
-  "medianLatencyMs": 21137,
+  "medianLatencyMs": 20930,
   "summary": {
-    "cases": 5,
+    "cases": 25,
     "precision": 1,
-    "recall": 0.875,
-    "f1": 0.9333333333333333,
-    "skillPrecision": 0.9655172413793104,
-    "skillRecall": 0.8,
+    "recall": 0.9111111111111111,
+    "f1": 0.9534883720930233,
+    "skillPrecision": 0.9921875,
+    "skillRecall": 0.8089171974522293,
     "kindAccuracy": 1,
-    "categoryAccuracy": 0.8857142857142857,
-    "anyOfAccuracy": 1,
+    "categoryAccuracy": 0.8536585365853658,
+    "anyOfAccuracy": 0.9817073170731707,
     "minYearsAccuracy": 1,
     "factsAccuracy": {
-      "country": 1,
+      "country": 0.96,
       "workMode": 1,
-      "relocation": 1
+      "relocation": 0.92
     }
   },
   "cases": [
     {
       "id": "01-senior-frontend-remote-eu",
-      "latencyMs": 21137,
+      "latencyMs": 31948,
       "failed": false,
       "paired": 7,
       "gold": 9,
@@ -39,7 +39,7 @@
     },
     {
       "id": "02-react-native-london-onsite",
-      "latencyMs": 15390,
+      "latencyMs": 17234,
       "failed": false,
       "paired": 5,
       "gold": 8,
@@ -53,7 +53,7 @@
     },
     {
       "id": "03-ai-engineer-amsterdam-relocation",
-      "latencyMs": 23624,
+      "latencyMs": 26783,
       "failed": false,
       "paired": 8,
       "gold": 8,
@@ -63,7 +63,7 @@
     },
     {
       "id": "04-junior-fullstack-istanbul",
-      "latencyMs": 21849,
+      "latencyMs": 22978,
       "failed": false,
       "paired": 8,
       "gold": 8,
@@ -73,12 +73,229 @@
     },
     {
       "id": "05-staff-frontend-design-systems-germany",
-      "latencyMs": 20872,
+      "latencyMs": 21184,
       "failed": false,
       "paired": 7,
       "gold": 7,
       "predicted": 7,
       "missed": [],
+      "extra": []
+    },
+    {
+      "id": "06-backend-go-stockholm",
+      "latencyMs": 19372,
+      "failed": false,
+      "paired": 7,
+      "gold": 7,
+      "predicted": 7,
+      "missed": [],
+      "extra": []
+    },
+    {
+      "id": "07-frontend-angular-lisbon",
+      "latencyMs": 15006,
+      "failed": false,
+      "paired": 5,
+      "gold": 8,
+      "predicted": 5,
+      "missed": [
+        "Write end-to-end tests with Cypress",
+        "Portuguese or Spanish",
+        "Experience in travel or hospitality"
+      ],
+      "extra": []
+    },
+    {
+      "id": "08-senior-fullstack-remote-europe",
+      "latencyMs": 20831,
+      "failed": false,
+      "paired": 6,
+      "gold": 8,
+      "predicted": 6,
+      "missed": [
+        "Background in banking or regulatory compliance",
+        "Terraform"
+      ],
+      "extra": []
+    },
+    {
+      "id": "09-senior-ios-dublin",
+      "latencyMs": 21515,
+      "failed": false,
+      "paired": 7,
+      "gold": 7,
+      "predicted": 7,
+      "missed": [],
+      "extra": []
+    },
+    {
+      "id": "10-senior-ml-zurich",
+      "latencyMs": 29888,
+      "failed": false,
+      "paired": 6,
+      "gold": 6,
+      "predicted": 6,
+      "missed": [],
+      "extra": []
+    },
+    {
+      "id": "11-junior-frontend-warsaw-prose",
+      "latencyMs": 32715,
+      "failed": false,
+      "paired": 6,
+      "gold": 6,
+      "predicted": 6,
+      "missed": [],
+      "extra": []
+    },
+    {
+      "id": "12-staff-platform-toronto",
+      "latencyMs": 20845,
+      "failed": false,
+      "paired": 7,
+      "gold": 7,
+      "predicted": 7,
+      "missed": [],
+      "extra": []
+    },
+    {
+      "id": "13-fullstack-laravel-berlin",
+      "latencyMs": 16919,
+      "failed": false,
+      "paired": 5,
+      "gold": 7,
+      "predicted": 5,
+      "missed": [
+        "Experience with Shopware",
+        "Docker"
+      ],
+      "extra": []
+    },
+    {
+      "id": "14-ai-engineer-austin",
+      "latencyMs": 20564,
+      "failed": false,
+      "paired": 7,
+      "gold": 7,
+      "predicted": 7,
+      "missed": [],
+      "extra": []
+    },
+    {
+      "id": "15-senior-frontend-remote-netherlands",
+      "latencyMs": 23225,
+      "failed": false,
+      "paired": 8,
+      "gold": 8,
+      "predicted": 8,
+      "missed": [],
+      "extra": []
+    },
+    {
+      "id": "16-backend-node-istanbul",
+      "latencyMs": 21322,
+      "failed": false,
+      "paired": 7,
+      "gold": 7,
+      "predicted": 7,
+      "missed": [],
+      "extra": []
+    },
+    {
+      "id": "17-graduate-frontend-madrid",
+      "latencyMs": 29605,
+      "failed": false,
+      "paired": 6,
+      "gold": 6,
+      "predicted": 6,
+      "missed": [],
+      "extra": []
+    },
+    {
+      "id": "18-flutter-helsinki",
+      "latencyMs": 20930,
+      "failed": false,
+      "paired": 7,
+      "gold": 7,
+      "predicted": 7,
+      "missed": [],
+      "extra": []
+    },
+    {
+      "id": "19-senior-fullstack-copenhagen-no-nice",
+      "latencyMs": 26836,
+      "failed": false,
+      "paired": 6,
+      "gold": 7,
+      "predicted": 6,
+      "missed": [
+        "Run our services on Azure"
+      ],
+      "extra": []
+    },
+    {
+      "id": "20-staff-ai-london",
+      "latencyMs": 22376,
+      "failed": false,
+      "paired": 8,
+      "gold": 8,
+      "predicted": 8,
+      "missed": [],
+      "extra": []
+    },
+    {
+      "id": "21-vue-developer-vienna",
+      "latencyMs": 17221,
+      "failed": false,
+      "paired": 6,
+      "gold": 6,
+      "predicted": 6,
+      "missed": [],
+      "extra": []
+    },
+    {
+      "id": "22-senior-dotnet-brussels",
+      "latencyMs": 15885,
+      "failed": false,
+      "paired": 5,
+      "gold": 7,
+      "predicted": 5,
+      "missed": [
+        "Experience in the public sector",
+        "Angular"
+      ],
+      "extra": []
+    },
+    {
+      "id": "23-junior-android-sofia",
+      "latencyMs": 17397,
+      "failed": false,
+      "paired": 6,
+      "gold": 6,
+      "predicted": 6,
+      "missed": [],
+      "extra": []
+    },
+    {
+      "id": "24-fullstack-remote-worldwide",
+      "latencyMs": 18288,
+      "failed": false,
+      "paired": 7,
+      "gold": 7,
+      "predicted": 7,
+      "missed": [],
+      "extra": []
+    },
+    {
+      "id": "25-senior-react-native-barcelona",
+      "latencyMs": 20215,
+      "failed": false,
+      "paired": 7,
+      "gold": 8,
+      "predicted": 7,
+      "missed": [
+        "Set up feature flags with LaunchDarkly"
+      ],
       "extra": []
     }
   ]

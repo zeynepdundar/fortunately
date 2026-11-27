@@ -1,0 +1,74 @@
+{
+  "id": "24-fullstack-remote-worldwide",
+  "role": "full-stack",
+  "level": "mid",
+  "posting": "# Full-stack Developer — Openhive (fictional)\n\nOpenhive builds open-source scheduling tools. Fully remote, anywhere in the world.\n\nRequirements:\n- 2+ years with TypeScript.\n- Next.js and Prisma.\n- PostgreSQL.\n- Experience contributing to open-source projects.\n- Comfortable working asynchronously across time zones.\n\nBonus:\n- tRPC.\n- Experience with self-hosted deployments.\n",
+  "gold": {
+    "facts": {
+      "title": "Full-stack Developer",
+      "company": "Openhive",
+      "country": null,
+      "city": null,
+      "workMode": "remote",
+      "relocation": "not_stated"
+    },
+    "requirements": [
+      {
+        "text": "2+ years with TypeScript",
+        "kind": "must",
+        "category": "technology",
+        "skills": ["typescript"],
+        "anyOf": false,
+        "minYears": 2
+      },
+      {
+        "text": "Next.js and Prisma",
+        "kind": "must",
+        "category": "technology",
+        "skills": ["next-js", "prisma"],
+        "anyOf": false,
+        "minYears": null
+      },
+      {
+        "text": "PostgreSQL",
+        "kind": "must",
+        "category": "technology",
+        "skills": ["postgresql"],
+        "anyOf": false,
+        "minYears": null
+      },
+      {
+        "text": "Experience contributing to open-source projects",
+        "kind": "must",
+        "category": "experience",
+        "skills": [],
+        "anyOf": false,
+        "minYears": null
+      },
+      {
+        "text": "Comfortable working asynchronously across time zones",
+        "kind": "must",
+        "category": "soft_skill",
+        "skills": [],
+        "anyOf": false,
+        "minYears": null
+      },
+      {
+        "text": "tRPC",
+        "kind": "nice",
+        "category": "technology",
+        "skills": ["trpc"],
+        "anyOf": false,
+        "minYears": null
+      },
+      {
+        "text": "Experience with self-hosted deployments",
+        "kind": "nice",
+        "category": "experience",
+        "skills": [],
+        "anyOf": false,
+        "minYears": null
+      }
+    ]
+  }
+}

@@ -1,0 +1,74 @@
+{
+  "id": "13-fullstack-laravel-berlin",
+  "role": "full-stack",
+  "level": "mid",
+  "posting": "# Full-stack Developer (Vue & Laravel) — Gartenwerk (fictional)\n\nGartenwerk sells garden supplies online. Berlin, fully on-site.\n\n## Your profile\n\n- 3+ years with PHP and Laravel.\n- Vue and Pinia.\n- MySQL.\n- Writing automated tests with PHPUnit or Pest.\n- Fluent German and good English.\n\n## Plus\n\n- Experience with Shopware.\n- Docker.\n\nWe are unable to offer relocation or visa sponsorship.\n",
+  "gold": {
+    "facts": {
+      "title": "Full-stack Developer (Vue & Laravel)",
+      "company": "Gartenwerk",
+      "country": "DE",
+      "city": "Berlin",
+      "workMode": "onsite",
+      "relocation": "no"
+    },
+    "requirements": [
+      {
+        "text": "3+ years with PHP and Laravel",
+        "kind": "must",
+        "category": "technology",
+        "skills": ["php", "laravel"],
+        "anyOf": false,
+        "minYears": 3
+      },
+      {
+        "text": "Vue and Pinia",
+        "kind": "must",
+        "category": "technology",
+        "skills": ["vue", "pinia"],
+        "anyOf": false,
+        "minYears": null
+      },
+      {
+        "text": "MySQL",
+        "kind": "must",
+        "category": "technology",
+        "skills": ["mysql"],
+        "anyOf": false,
+        "minYears": null
+      },
+      {
+        "text": "Writing automated tests with PHPUnit or Pest",
+        "kind": "must",
+        "category": "technology",
+        "skills": ["phpunit", "pest"],
+        "anyOf": true,
+        "minYears": null
+      },
+      {
+        "text": "Fluent German and good English",
+        "kind": "must",
+        "category": "other",
+        "skills": [],
+        "anyOf": false,
+        "minYears": null
+      },
+      {
+        "text": "Experience with Shopware",
+        "kind": "nice",
+        "category": "technology",
+        "skills": ["shopware"],
+        "anyOf": false,
+        "minYears": null
+      },
+      {
+        "text": "Docker",
+        "kind": "nice",
+        "category": "technology",
+        "skills": ["docker"],
+        "anyOf": false,
+        "minYears": null
+      }
+    ]
+  }
+}

@@ -1,0 +1,82 @@
+{
+  "id": "08-senior-fullstack-remote-europe",
+  "role": "full-stack",
+  "level": "senior",
+  "posting": "# Senior Full-stack Engineer — Cobaltwise (fictional)\n\nCobaltwise builds compliance tooling for mid-size banks. Remote across Europe (CET ± 2 hours).\n\n## Requirements\n\n- 5–8 years of professional software development.\n- TypeScript on both the frontend and backend (React, Node.js).\n- Experience designing REST or GraphQL APIs.\n- AWS (Lambda, DynamoDB) or similar cloud services.\n- A degree in computer science or equivalent experience.\n- You write clear documentation.\n\n## Nice to have\n\n- Background in banking or regulatory compliance.\n- Terraform.\n",
+  "gold": {
+    "facts": {
+      "title": "Senior Full-stack Engineer",
+      "company": "Cobaltwise",
+      "country": null,
+      "city": null,
+      "workMode": "remote",
+      "relocation": "not_stated"
+    },
+    "requirements": [
+      {
+        "text": "5–8 years of professional software development",
+        "kind": "must",
+        "category": "experience",
+        "skills": [],
+        "anyOf": false,
+        "minYears": 5
+      },
+      {
+        "text": "TypeScript on both the frontend and backend (React, Node.js)",
+        "kind": "must",
+        "category": "technology",
+        "skills": ["typescript", "react", "node-js"],
+        "anyOf": false,
+        "minYears": null
+      },
+      {
+        "text": "Experience designing REST or GraphQL APIs",
+        "kind": "must",
+        "category": "technology",
+        "skills": ["rest", "graphql"],
+        "anyOf": true,
+        "minYears": null
+      },
+      {
+        "text": "AWS (Lambda, DynamoDB) or similar cloud services",
+        "kind": "must",
+        "category": "technology",
+        "skills": ["aws", "lambda", "dynamodb"],
+        "anyOf": true,
+        "minYears": null
+      },
+      {
+        "text": "A degree in computer science or equivalent experience",
+        "kind": "must",
+        "category": "education",
+        "skills": [],
+        "anyOf": false,
+        "minYears": null
+      },
+      {
+        "text": "You write clear documentation",
+        "kind": "must",
+        "category": "soft_skill",
+        "skills": [],
+        "anyOf": false,
+        "minYears": null
+      },
+      {
+        "text": "Background in banking or regulatory compliance",
+        "kind": "nice",
+        "category": "domain",
+        "skills": [],
+        "anyOf": false,
+        "minYears": null
+      },
+      {
+        "text": "Terraform",
+        "kind": "nice",
+        "category": "technology",
+        "skills": ["terraform"],
+        "anyOf": false,
+        "minYears": null
+      }
+    ]
+  }
+}

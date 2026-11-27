@@ -1,0 +1,82 @@
+{
+  "id": "20-staff-ai-london",
+  "role": "ai",
+  "level": "staff",
+  "posting": "# Staff AI Engineer — Ravenmoor Analytics (fictional)\n\nRavenmoor Analytics builds research assistants for investment analysts. London, hybrid.\n\n## Requirements\n\n- 8+ years of software engineering, including 2+ years building LLM products.\n- Python and TypeScript.\n- Designing retrieval systems with Elasticsearch or OpenSearch.\n- Running offline and online evaluations of model quality.\n- Leading projects across several teams.\n\n## Nice to have\n\n- Fine-tuning open-weight models.\n- Experience in finance.\n- Rust.\n\nVisa sponsorship and relocation support are available.\n",
+  "gold": {
+    "facts": {
+      "title": "Staff AI Engineer",
+      "company": "Ravenmoor Analytics",
+      "country": "GB",
+      "city": "London",
+      "workMode": "hybrid",
+      "relocation": "yes"
+    },
+    "requirements": [
+      {
+        "text": "8+ years of software engineering, including 2+ years building LLM products",
+        "kind": "must",
+        "category": "experience",
+        "skills": [],
+        "anyOf": false,
+        "minYears": 8
+      },
+      {
+        "text": "Python and TypeScript",
+        "kind": "must",
+        "category": "technology",
+        "skills": ["python", "typescript"],
+        "anyOf": false,
+        "minYears": null
+      },
+      {
+        "text": "Designing retrieval systems with Elasticsearch or OpenSearch",
+        "kind": "must",
+        "category": "technology",
+        "skills": ["elasticsearch", "opensearch"],
+        "anyOf": true,
+        "minYears": null
+      },
+      {
+        "text": "Running offline and online evaluations of model quality",
+        "kind": "must",
+        "category": "experience",
+        "skills": [],
+        "anyOf": false,
+        "minYears": null
+      },
+      {
+        "text": "Leading projects across several teams",
+        "kind": "must",
+        "category": "soft_skill",
+        "skills": [],
+        "anyOf": false,
+        "minYears": null
+      },
+      {
+        "text": "Fine-tuning open-weight models",
+        "kind": "nice",
+        "category": "experience",
+        "skills": [],
+        "anyOf": false,
+        "minYears": null
+      },
+      {
+        "text": "Experience in finance",
+        "kind": "nice",
+        "category": "domain",
+        "skills": [],
+        "anyOf": false,
+        "minYears": null
+      },
+      {
+        "text": "Rust",
+        "kind": "nice",
+        "category": "technology",
+        "skills": ["rust"],
+        "anyOf": false,
+        "minYears": null
+      }
+    ]
+  }
+}

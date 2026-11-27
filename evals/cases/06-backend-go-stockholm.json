@@ -1,0 +1,74 @@
+{
+  "id": "06-backend-go-stockholm",
+  "role": "backend",
+  "level": "mid",
+  "posting": "# Backend Engineer (Go) — Fjordline Payments (fictional)\n\nFjordline Payments processes card payments for Nordic e-commerce shops. Stockholm, hybrid.\n\nRequirements:\n- 4+ years of backend development.\n- Go.\n- PostgreSQL and Redis.\n- Experience with Kubernetes or Nomad.\n- Knowledge of payment systems.\n\nNice to have:\n- Kafka.\n- Swedish.\n\nRelocation assistance is available for candidates moving to Sweden.\n",
+  "gold": {
+    "facts": {
+      "title": "Backend Engineer (Go)",
+      "company": "Fjordline Payments",
+      "country": "SE",
+      "city": "Stockholm",
+      "workMode": "hybrid",
+      "relocation": "yes"
+    },
+    "requirements": [
+      {
+        "text": "4+ years of backend development",
+        "kind": "must",
+        "category": "experience",
+        "skills": [],
+        "anyOf": false,
+        "minYears": 4
+      },
+      {
+        "text": "Go",
+        "kind": "must",
+        "category": "technology",
+        "skills": ["go"],
+        "anyOf": false,
+        "minYears": null
+      },
+      {
+        "text": "PostgreSQL and Redis",
+        "kind": "must",
+        "category": "technology",
+        "skills": ["postgresql", "redis"],
+        "anyOf": false,
+        "minYears": null
+      },
+      {
+        "text": "Experience with Kubernetes or Nomad",
+        "kind": "must",
+        "category": "technology",
+        "skills": ["kubernetes", "nomad"],
+        "anyOf": true,
+        "minYears": null
+      },
+      {
+        "text": "Knowledge of payment systems",
+        "kind": "must",
+        "category": "domain",
+        "skills": [],
+        "anyOf": false,
+        "minYears": null
+      },
+      {
+        "text": "Kafka",
+        "kind": "nice",
+        "category": "technology",
+        "skills": ["kafka"],
+        "anyOf": false,
+        "minYears": null
+      },
+      {
+        "text": "Swedish",
+        "kind": "nice",
+        "category": "other",
+        "skills": [],
+        "anyOf": false,
+        "minYears": null
+      }
+    ]
+  }
+}

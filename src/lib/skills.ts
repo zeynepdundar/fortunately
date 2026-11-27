@@ -17,6 +17,11 @@ const ALIASES: Record<string, string> = {
   vuejs: "vue",
   "express-js": "express",
   "ai-sdk": "vercel-ai-sdk",
+  tailwindcss: "tailwind-css",
+  tailwind: "tailwind-css",
+  "apache-kafka": "kafka",
+  net: "dotnet",
+  "dot-net": "dotnet",
 };
 
 /** Lowercase, kebab-case and alias-resolve a skill name. */

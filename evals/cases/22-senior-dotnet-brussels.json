@@ -1,0 +1,74 @@
+{
+  "id": "22-senior-dotnet-brussels",
+  "role": "backend",
+  "level": "senior",
+  "posting": "# Senior .NET Engineer — Kanaal Public Services (fictional)\n\nKanaal Public Services builds software for local governments. Brussels, hybrid.\n\n## Requirements\n\n- 6+ years of C# and .NET.\n- ASP.NET Core and Entity Framework.\n- SQL Server.\n- Experience with Azure DevOps pipelines.\n- French or Dutch.\n\n## Bonus\n\n- Experience in the public sector.\n- Angular.\n\nYou must already be based in Belgium.\n",
+  "gold": {
+    "facts": {
+      "title": "Senior .NET Engineer",
+      "company": "Kanaal Public Services",
+      "country": "BE",
+      "city": "Brussels",
+      "workMode": "hybrid",
+      "relocation": "no"
+    },
+    "requirements": [
+      {
+        "text": "6+ years of C# and .NET",
+        "kind": "must",
+        "category": "technology",
+        "skills": ["c#", "dotnet"],
+        "anyOf": false,
+        "minYears": 6
+      },
+      {
+        "text": "ASP.NET Core and Entity Framework",
+        "kind": "must",
+        "category": "technology",
+        "skills": ["asp-net-core", "entity-framework"],
+        "anyOf": false,
+        "minYears": null
+      },
+      {
+        "text": "SQL Server",
+        "kind": "must",
+        "category": "technology",
+        "skills": ["sql-server"],
+        "anyOf": false,
+        "minYears": null
+      },
+      {
+        "text": "Experience with Azure DevOps pipelines",
+        "kind": "must",
+        "category": "technology",
+        "skills": ["azure-devops"],
+        "anyOf": false,
+        "minYears": null
+      },
+      {
+        "text": "French or Dutch",
+        "kind": "must",
+        "category": "other",
+        "skills": [],
+        "anyOf": false,
+        "minYears": null
+      },
+      {
+        "text": "Experience in the public sector",
+        "kind": "nice",
+        "category": "domain",
+        "skills": [],
+        "anyOf": false,
+        "minYears": null
+      },
+      {
+        "text": "Angular",
+        "kind": "nice",
+        "category": "technology",
+        "skills": ["angular"],
+        "anyOf": false,
+        "minYears": null
+      }
+    ]
+  }
+}
