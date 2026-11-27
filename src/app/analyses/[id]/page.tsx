@@ -5,6 +5,7 @@ import { Suspense } from "react";
 import { FactsBar } from "@/components/facts-bar";
 import { hiddenReason, PreferenceBadges } from "@/components/match-summary";
 import { RequirementRow } from "@/components/requirement-row";
+import { StatusSelect } from "@/components/status-select";
 import { evaluatePosting, type Evaluation } from "@/lib/criteria/engine";
 import { toEngineProfile } from "@/lib/criteria/postings-list";
 import { MatchButton } from "./match-button";
@@ -82,9 +83,17 @@ async function AnalysisView({ params }: { params: Promise<{ id: string }> }) {
         >
           ← Analyze another posting
         </Link>
-        <h1 className="text-2xl font-semibold tracking-tight">
-          {analysis.jobTitle ?? analysis.postingTitle ?? "Untitled posting"}
-        </h1>
+        <div className="flex flex-wrap items-start justify-between gap-3">
+          <h1 className="text-2xl font-semibold tracking-tight">
+            {analysis.jobTitle ?? analysis.postingTitle ?? "Untitled posting"}
+          </h1>
+          {analysis.status === "done" && (
+            <StatusSelect
+              postingId={analysis.postingId}
+              status={analysis.postingStatus}
+            />
+          )}
+        </div>
         {analysis.status === "done" && (
           <FactsBar
             facts={{

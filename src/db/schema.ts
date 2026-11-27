@@ -38,6 +38,15 @@ export const relocationSupport = pgEnum("relocation_support", [
   "not_stated",
 ]);
 
+export const applicationStatus = pgEnum("application_status", [
+  "new",
+  "applied",
+  "interview",
+  "offer",
+  "rejected",
+  "skipped",
+]);
+
 /** Anonymous visitor, identified by a random id in an httpOnly cookie. */
 export const workspaces = pgTable("workspaces", {
   id: id(),
@@ -71,6 +80,9 @@ export const postings = pgTable("postings", {
   rawText: text("raw_text").notNull(),
   contentHash: text("content_hash").notNull(),
   isSample: boolean("is_sample").notNull().default(false),
+  /** Where the visitor stands with this posting; kept across re-analyses. */
+  status: applicationStatus("status").notNull().default("new"),
+  statusChangedAt: timestamp("status_changed_at", { withTimezone: true }),
   createdAt: createdAt(),
 });
 

@@ -36,6 +36,13 @@
       "when": 1795705068590,
       "tag": "0004_nebulous_justin_hammer",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1795774463481,
+      "tag": "0005_friendly_inertia",
+      "breakpoints": true
     }
   ]
 }

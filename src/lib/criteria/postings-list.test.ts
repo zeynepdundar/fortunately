@@ -12,6 +12,9 @@ const analysis = (
   overrides: Partial<ListedAnalysis> = {},
 ): ListedAnalysis => ({
   analysisId: id,
+  postingId: `posting-${id}`,
+  status: "new",
+  statusChangedAt: null,
   title: `Job ${id}`,
   company: "Acme",
   city: "Berlin",

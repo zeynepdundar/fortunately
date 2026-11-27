@@ -1,3 +1,4 @@
+import type { ApplicationStatus } from "@/lib/application-status";
 import type { CheckedMatch, PostingFacts, Requirement } from "@/lib/schemas";
 import type { CriteriaConfig } from "./config";
 import {
@@ -11,6 +12,9 @@ import {
 /** One saved analysis as the postings list needs it (the latest one per posting). */
 export type ListedAnalysis = {
   analysisId: string;
+  postingId: string;
+  status: ApplicationStatus;
+  statusChangedAt: Date | null;
   title: string;
   company: string | null;
   city: string | null;

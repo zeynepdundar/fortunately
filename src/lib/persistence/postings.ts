@@ -2,6 +2,7 @@ import "server-only";
 import { and, desc, eq, inArray } from "drizzle-orm";
 import { getDb } from "@/db";
 import { analyses, matches, postings, requirements } from "@/db/schema";
+import type { ApplicationStatus } from "@/lib/application-status";
 import type { ListedAnalysis } from "@/lib/criteria/postings-list";
 
 /** The latest finished analysis of every posting in the workspace, with requirements and verdicts. */
@@ -15,6 +16,8 @@ export async function listLatestAnalyses(
       postingId: analyses.postingId,
       jobTitle: analyses.jobTitle,
       postingTitle: postings.title,
+      status: postings.status,
+      statusChangedAt: postings.statusChangedAt,
       company: analyses.company,
       city: analyses.city,
       country: analyses.country,
@@ -72,6 +75,9 @@ export async function listLatestAnalyses(
       .sort((a, b) => a.position - b.position);
     return {
       analysisId: r.analysisId,
+      postingId: r.postingId,
+      status: r.status,
+      statusChangedAt: r.statusChangedAt,
       title: r.jobTitle ?? r.postingTitle ?? "Untitled posting",
       company: r.company,
       city: r.city,
@@ -91,4 +97,20 @@ export async function listLatestAnalyses(
       }),
     };
   });
+}
+
+/** Set the application status of a posting in the workspace. False when the posting is not there. */
+export async function setPostingStatus(
+  workspaceId: string,
+  postingId: string,
+  status: ApplicationStatus,
+): Promise<boolean> {
+  const updated = await getDb()
+    .update(postings)
+    .set({ status, statusChangedAt: new Date() })
+    .where(
+      and(eq(postings.id, postingId), eq(postings.workspaceId, workspaceId)),
+    )
+    .returning({ id: postings.id });
+  return updated.length > 0;
 }

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { StatusSelect } from "./status-select";
 import type { ListedPosting } from "@/lib/criteria/postings-list";
 import {
   BelowThresholdReasons,
@@ -52,7 +53,7 @@ export function PostingCard({ posting }: { posting: ListedPosting }) {
         />
       </div>
 
-      <div className="flex w-24 shrink-0 flex-col items-end">
+      <div className="flex w-36 shrink-0 flex-col items-end">
         {match.matched ? (
           <>
             <span className="text-2xl font-semibold tabular-nums">
@@ -66,6 +67,11 @@ export function PostingCard({ posting }: { posting: ListedPosting }) {
             <span className="text-xs text-neutral-500">not matched</span>
           </>
         )}
+        <StatusSelect
+          postingId={analysis.postingId}
+          status={analysis.status}
+          className="mt-2"
+        />
       </div>
     </li>
   );

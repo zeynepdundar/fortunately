@@ -129,8 +129,11 @@ export async function getAnalysis(analysisId: string, workspaceId: string) {
       city: analyses.city,
       workMode: analyses.workMode,
       relocation: analyses.relocation,
+      postingId: postings.id,
       postingTitle: postings.title,
       postingText: postings.rawText,
+      postingStatus: postings.status,
+      statusChangedAt: postings.statusChangedAt,
       cvId: analyses.cvId,
     })
     .from(analyses)
