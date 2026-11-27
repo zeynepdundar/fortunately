@@ -91,6 +91,68 @@ describe("buildPostingList", () => {
   });
 });
 
+describe("buildPostingList with application status", () => {
+  const changed = (iso: string) => new Date(iso);
+
+  it("keeps only New postings in the ranked sections", () => {
+    const list = buildPostingList(
+      [
+        analysis("new"),
+        analysis("applied", { status: "applied" }),
+        analysis("skipped", { status: "skipped" }),
+      ],
+      profile,
+      DEFAULT_CRITERIA,
+    );
+    expect(list.shown.map((p) => p.analysis.analysisId)).toEqual(["new"]);
+    expect(list.toDecide).toBe(1);
+    expect(list.inProgress.map((p) => p.analysis.analysisId)).toEqual([
+      "applied",
+    ]);
+    expect(list.closed.map((p) => p.analysis.analysisId)).toEqual(["skipped"]);
+  });
+
+  it("keeps a posting in progress even when it fails a preference", () => {
+    const list = buildPostingList(
+      [analysis("x", { status: "interview", relocation: "no" })],
+      profile,
+      DEFAULT_CRITERIA,
+    );
+    expect(list.filteredOut).toHaveLength(0);
+    expect(list.inProgress).toHaveLength(1);
+  });
+
+  it("sorts in progress and closed by the latest status change", () => {
+    const list = buildPostingList(
+      [
+        analysis("old", {
+          status: "applied",
+          statusChangedAt: changed("2026-11-20T10:00:00Z"),
+        }),
+        analysis("recent", {
+          status: "offer",
+          statusChangedAt: changed("2026-11-27T10:00:00Z"),
+        }),
+        analysis("r1", {
+          status: "rejected",
+          statusChangedAt: changed("2026-11-21T10:00:00Z"),
+        }),
+        analysis("r2", {
+          status: "skipped",
+          statusChangedAt: changed("2026-11-25T10:00:00Z"),
+        }),
+      ],
+      profile,
+      DEFAULT_CRITERIA,
+    );
+    expect(list.inProgress.map((p) => p.analysis.analysisId)).toEqual([
+      "recent",
+      "old",
+    ]);
+    expect(list.closed.map((p) => p.analysis.analysisId)).toEqual(["r2", "r1"]);
+  });
+});
+
 describe("toEngineProfile", () => {
   it("falls back to the empty profile", () => {
     expect(toEngineProfile(null)).toEqual(EMPTY_PROFILE);

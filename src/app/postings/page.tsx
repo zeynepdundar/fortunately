@@ -22,8 +22,8 @@ export default function PostingsPage() {
       <div>
         <h1 className="text-2xl font-semibold tracking-tight">Postings</h1>
         <p className="mt-1 text-sm text-neutral-500">
-          Every posting you analysed, ranked by how many must-haves your CV
-          proves.
+          New postings ranked by how many must-haves your CV proves, then the
+          ones you applied to and the ones you closed.
         </p>
       </div>
       <Suspense
@@ -110,40 +110,82 @@ async function PostingsLoader() {
     criteria?.config ?? DEFAULT_CRITERIA,
   );
 
+  const preferencesLine = (
+    <p className="text-xs text-neutral-500">
+      {list.shown.length} shown · {list.belowThreshold.length} below threshold ·{" "}
+      {list.filteredOut.length} filtered out · using{" "}
+      {criteria && !criteria.isDefault
+        ? "your preferences"
+        : "the default preferences"}{" "}
+      ·{" "}
+      <Link href="/profile/preferences" className="underline">
+        Adjust
+      </Link>
+      .{" "}
+      {!profile && (
+        <>
+          <Link href="/profile" className="underline">
+            Fill in your profile
+          </Link>{" "}
+          to check years, countries and relocation.
+        </>
+      )}
+    </p>
+  );
+
   return (
-    <div className="flex flex-col gap-5">
-      <p className="text-xs text-neutral-500">
-        {list.shown.length} shown · {list.belowThreshold.length} below threshold
-        · {list.filteredOut.length} filtered out · using{" "}
-        {criteria && !criteria.isDefault
-          ? "your preferences"
-          : "the default preferences"}{" "}
-        ·{" "}
-        <Link href="/profile/preferences" className="underline">
-          Adjust
-        </Link>
-        .{" "}
-        {!profile && (
+    <div className="flex flex-col gap-8">
+      <section aria-labelledby="to-decide" className="flex flex-col gap-3">
+        <h2 id="to-decide" className="text-lg font-semibold">
+          To decide{" "}
+          <span className="font-normal text-neutral-500 tabular-nums">
+            ({list.toDecide})
+          </span>
+        </h2>
+        {list.toDecide === 0 ? (
+          <p className="text-sm text-neutral-500">
+            Nothing to decide.{" "}
+            <Link href="/analyze" className="font-medium underline">
+              Analyze a new posting
+            </Link>
+            .
+          </p>
+        ) : (
           <>
-            <Link href="/profile" className="underline">
-              Fill in your profile
-            </Link>{" "}
-            to check years, countries and relocation.
+            {preferencesLine}
+            {list.shown.length === 0 && (
+              <p className="text-sm text-neutral-500">
+                No posting passes your filters right now.
+              </p>
+            )}
+            <Section title="Shown" postings={list.shown} />
+            <Section
+              title="Below threshold"
+              postings={list.belowThreshold}
+              open={false}
+            />
+            <Section
+              title="Filtered out"
+              postings={list.filteredOut}
+              open={false}
+            />
           </>
         )}
-      </p>
-      {list.shown.length === 0 && (
-        <p className="text-sm text-neutral-500">
-          No posting passes your filters right now.
-        </p>
+      </section>
+
+      {list.inProgress.length > 0 && (
+        <section aria-labelledby="in-progress" className="flex flex-col gap-3">
+          <h2 id="in-progress" className="text-lg font-semibold">
+            In progress{" "}
+            <span className="font-normal text-neutral-500 tabular-nums">
+              ({list.inProgress.length})
+            </span>
+          </h2>
+          <Section title="In progress" postings={list.inProgress} />
+        </section>
       )}
-      <Section title="Shown" postings={list.shown} />
-      <Section
-        title="Below threshold"
-        postings={list.belowThreshold}
-        open={false}
-      />
-      <Section title="Filtered out" postings={list.filteredOut} open={false} />
+
+      <Section title="Closed" postings={list.closed} open={false} />
     </div>
   );
 }

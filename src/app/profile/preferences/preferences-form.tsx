@@ -244,7 +244,7 @@ export function PreferencesForm({
         ) : (
           <>
             <p className="text-sm tabular-nums" aria-live="polite">
-              {preview.shown.length} of {analyses.length} shown ·{" "}
+              {preview.shown.length} of {preview.toDecide} to decide shown ·{" "}
               {preview.belowThreshold.length} below threshold ·{" "}
               {preview.filteredOut.length} filtered out
             </p>

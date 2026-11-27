@@ -1,4 +1,4 @@
-import type { ApplicationStatus } from "@/lib/application-status";
+import { statusGroup, type ApplicationStatus } from "@/lib/application-status";
 import type { CheckedMatch, PostingFacts, Requirement } from "@/lib/schemas";
 import type { CriteriaConfig } from "./config";
 import {
@@ -33,11 +33,22 @@ export type ListedPosting = {
   verdicts: { met: number; partial: number; missing: number; matched: boolean };
 };
 
+/**
+ * To decide (status New) is split by the criteria engine into shown, below threshold and
+ * filtered out. In progress and Closed keep every posting, newest status change first.
+ */
 export type PostingList = {
   shown: ListedPosting[];
   belowThreshold: ListedPosting[];
   filteredOut: ListedPosting[];
+  /** Number of postings still to decide (shown + below threshold + filtered out). */
+  toDecide: number;
+  inProgress: ListedPosting[];
+  closed: ListedPosting[];
 };
+
+const lastChange = (p: ListedPosting) =>
+  (p.analysis.statusChangedAt ?? p.analysis.createdAt).getTime();
 
 /** Evaluate every posting with the criteria engine and split it into the three sections. */
 export function buildPostingList(
@@ -77,12 +88,24 @@ export function buildPostingList(
         b.analysis.createdAt.getTime() - a.analysis.createdAt.getTime(),
     );
 
+  const group = (p: ListedPosting) => statusGroup(p.analysis.status);
+  const undecided = listed.filter((p) => group(p) === "to_decide");
+  const byLastChange = (a: ListedPosting, b: ListedPosting) =>
+    lastChange(b) - lastChange(a);
+
   return {
-    shown: listed.filter((p) => p.evaluation.bucket === "shown"),
-    belowThreshold: listed.filter(
+    shown: undecided.filter((p) => p.evaluation.bucket === "shown"),
+    belowThreshold: undecided.filter(
       (p) => p.evaluation.bucket === "below_threshold",
     ),
-    filteredOut: listed.filter((p) => p.evaluation.bucket === "filtered_out"),
+    filteredOut: undecided.filter(
+      (p) => p.evaluation.bucket === "filtered_out",
+    ),
+    toDecide: undecided.length,
+    inProgress: listed
+      .filter((p) => group(p) === "in_progress")
+      .sort(byLastChange),
+    closed: listed.filter((p) => group(p) === "closed").sort(byLastChange),
   };
 }
 
