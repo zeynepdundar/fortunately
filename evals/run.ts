@@ -4,6 +4,7 @@
  *   pnpm eval --model ollama:qwen3:8b
  *   pnpm eval --model anthropic:claude-haiku-5-5 --limit 3
  *   pnpm eval --model ollama:qwen3:8b --case 03-ai-engineer-amsterdam-relocation
+ *   pnpm eval --rescore    # re-score saved runs from results/raw after a scoring change
  *
  * Runs every case in evals/cases through the same extraction and clean-up the app uses,
  * scores it against the gold labels, writes evals/results/<run>.json and regenerates the
@@ -43,12 +44,73 @@ const { values } = parseArgs({
     limit: { type: "string" },
     case: { type: "string" },
     thinking: { type: "boolean", default: false },
+    rescore: { type: "boolean", default: false },
   },
 });
 
 function fail(message: string): never {
   console.error(message);
   process.exit(1);
+}
+
+if (values.rescore) {
+  rescore();
+  process.exit(0);
+}
+
+/** Re-score every saved run whose raw outputs are still on disk; keeps latencies. */
+function rescore() {
+  const cases = loadCases();
+  for (const file of readdirSync(RESULTS).filter((f) => f.endsWith(".json"))) {
+    const run = JSON.parse(
+      readFileSync(path.join(RESULTS, file), "utf8"),
+    ) as RunResult;
+    const rawDir = path.join(RAW, file.replace(/\.json$/, ""));
+    if (!existsSync(rawDir)) {
+      console.log(`- ${file}: no raw outputs, kept as is`);
+      continue;
+    }
+    const scores: CaseScore[] = [];
+    run.cases = run.cases.map((row) => {
+      const c = cases.find((x) => x.id === row.id);
+      const rawFile = path.join(rawDir, `${row.id}.json`);
+      if (!c || row.failed || !existsSync(rawFile)) return row;
+      const predicted = cleanExtraction(
+        JSON.parse(readFileSync(rawFile, "utf8")),
+        c.posting,
+      );
+      const score = scoreCase(predicted, c.gold);
+      scores.push(score);
+      return {
+        ...row,
+        paired: score.paired,
+        gold: score.gold,
+        predicted: score.predicted,
+        missed: score.missed,
+        extra: score.extra,
+      };
+    });
+    run.summary = summarize(scores);
+    writeFileSync(
+      path.join(RESULTS, file),
+      `${JSON.stringify(run, null, 2)}\n`,
+    );
+    console.log(`✓ ${file}: F1 ${Math.round(run.summary.f1 * 100)}%`);
+  }
+  writeTable();
+}
+
+function writeTable() {
+  const all = readdirSync(RESULTS)
+    .filter((f) => f.endsWith(".json"))
+    .map(
+      (f) =>
+        JSON.parse(readFileSync(path.join(RESULTS, f), "utf8")) as RunResult,
+    );
+  writeFileSync(
+    README,
+    replaceBetweenMarkers(readFileSync(README, "utf8"), renderTable(all)),
+  );
 }
 
 const spec = values.model ?? fail("Usage: pnpm eval --model <provider:model>");
@@ -180,16 +242,7 @@ async function main() {
       path.join(RESULTS, `${slug}.json`),
       `${JSON.stringify(run, null, 2)}\n`,
     );
-    const all = readdirSync(RESULTS)
-      .filter((f) => f.endsWith(".json"))
-      .map(
-        (f) =>
-          JSON.parse(readFileSync(path.join(RESULTS, f), "utf8")) as RunResult,
-      );
-    writeFileSync(
-      README,
-      replaceBetweenMarkers(readFileSync(README, "utf8"), renderTable(all)),
-    );
+    writeTable();
   }
 
   const s = run.summary;

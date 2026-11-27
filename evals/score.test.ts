@@ -25,7 +25,7 @@ const facts: Extraction["facts"] = {
 };
 
 describe("similarity", () => {
-  it("compares skill sets when either item names technologies", () => {
+  it("compares skill sets", () => {
     expect(
       similarity(
         req("React and TypeScript", { skills: ["react", "typescript"] }),
@@ -38,6 +38,19 @@ describe("similarity", () => {
         req("Vue", { skills: ["vue"] }),
       ),
     ).toBe(0);
+  });
+
+  it("pairs the same line even when the skills are missing", () => {
+    expect(
+      similarity(
+        req("1+ years of experience with JavaScript", {
+          category: "experience",
+        }),
+        req("1+ years of experience with JavaScript", {
+          skills: ["javascript"],
+        }),
+      ),
+    ).toBe(1);
   });
 
   it("compares words when neither item names technologies", () => {

@@ -33,14 +33,15 @@ function jaccard<T>(a: Set<T>, b: Set<T>): number {
 }
 
 /**
- * How alike two requirements are, 0–1. Items that name technologies compare their skill
- * sets; items without technologies compare the words of their text.
+ * How alike two requirements are, 0–1: the better of their skill-set overlap and their word
+ * overlap. Finding the line counts as finding the requirement; wrong or missing skills on it
+ * show up in skill recall and category accuracy, not as a miss plus an extra.
  */
 export function similarity(predicted: Requirement, gold: Requirement): number {
-  const p = skillSet(predicted);
-  const g = skillSet(gold);
-  if (p.size > 0 || g.size > 0) return jaccard(p, g);
-  return jaccard(words(predicted.text), words(gold.text));
+  return Math.max(
+    jaccard(skillSet(predicted), skillSet(gold)),
+    jaccard(words(predicted.text), words(gold.text)),
+  );
 }
 
 export type Pair = { predicted: number; gold: number; similarity: number };

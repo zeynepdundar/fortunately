@@ -106,6 +106,9 @@ function dedupeKey(item: PartialRequirement): string {
 /** Common non-ISO codes a model may emit. */
 const COUNTRY_ALIASES: Record<string, string> = { UK: "GB" };
 
+/** Two-letter codes that name a region, not one country ("remote within the EU"). */
+const NOT_A_COUNTRY = new Set(["EU", "UN", "EZ"]);
+
 function cleanText(
   value: string | null | undefined,
 ): string | null | undefined {
@@ -121,7 +124,9 @@ export function cleanCountry(
   if (value === undefined) return undefined;
   const code = value?.trim().toUpperCase() ?? "";
   const mapped = COUNTRY_ALIASES[code] ?? code;
-  return /^[A-Z]{2}$/.test(mapped) ? mapped : null;
+  return /^[A-Z]{2}$/.test(mapped) && !NOT_A_COUNTRY.has(mapped)
+    ? mapped
+    : null;
 }
 
 /** Trim free text and validate the country code; safe on partial (streaming) facts. */

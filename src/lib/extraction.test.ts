@@ -33,6 +33,7 @@ describe("cleanFacts", () => {
     expect(cleanCountry("de")).toBe("DE");
     expect(cleanCountry("UK")).toBe("GB");
     expect(cleanCountry("Germany")).toBeNull();
+    expect(cleanCountry("EU")).toBeNull();
     expect(cleanCountry(null)).toBeNull();
   });
 

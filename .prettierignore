@@ -6,3 +6,7 @@ coverage
 playwright-report
 test-results
 AGENTS.md
+
+# Written by pnpm eval
+evals/results/
+evals/README.md

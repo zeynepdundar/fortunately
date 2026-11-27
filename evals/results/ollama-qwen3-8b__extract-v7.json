@@ -1,0 +1,86 @@
+{
+  "provider": "ollama",
+  "model": "qwen3:8b",
+  "promptVersion": "extract-v7",
+  "thinking": false,
+  "date": "2026-11-27T11:19:59.056Z",
+  "failures": 0,
+  "medianLatencyMs": 70230,
+  "summary": {
+    "cases": 5,
+    "precision": 1,
+    "recall": 0.85,
+    "f1": 0.9189189189189189,
+    "skillPrecision": 0.9642857142857143,
+    "skillRecall": 0.7714285714285715,
+    "kindAccuracy": 1,
+    "categoryAccuracy": 0.8823529411764706,
+    "anyOfAccuracy": 1,
+    "minYearsAccuracy": 1,
+    "factsAccuracy": {
+      "country": 1,
+      "workMode": 1,
+      "relocation": 1
+    }
+  },
+  "cases": [
+    {
+      "id": "01-senior-frontend-remote-eu",
+      "latencyMs": 42355,
+      "failed": false,
+      "paired": 9,
+      "gold": 9,
+      "predicted": 9,
+      "missed": [],
+      "extra": []
+    },
+    {
+      "id": "02-react-native-london-onsite",
+      "latencyMs": 74338,
+      "failed": false,
+      "paired": 5,
+      "gold": 8,
+      "predicted": 5,
+      "missed": [
+        "Release through Fastlane and monitor crashes with Sentry",
+        "Native modules in Swift or Kotlin",
+        "Experience with fintech products"
+      ],
+      "extra": []
+    },
+    {
+      "id": "03-ai-engineer-amsterdam-relocation",
+      "latencyMs": 41354,
+      "failed": false,
+      "paired": 8,
+      "gold": 8,
+      "predicted": 8,
+      "missed": [],
+      "extra": []
+    },
+    {
+      "id": "04-junior-fullstack-istanbul",
+      "latencyMs": 70230,
+      "failed": false,
+      "paired": 5,
+      "gold": 8,
+      "predicted": 5,
+      "missed": [
+        "Vue.js",
+        "Docker",
+        "English at B2 level or higher"
+      ],
+      "extra": []
+    },
+    {
+      "id": "05-staff-frontend-design-systems-germany",
+      "latencyMs": 82166,
+      "failed": false,
+      "paired": 7,
+      "gold": 7,
+      "predicted": 7,
+      "missed": [],
+      "extra": []
+    }
+  ]
+}

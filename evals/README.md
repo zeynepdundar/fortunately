@@ -15,8 +15,12 @@ below. Raw model outputs go to `results/raw/`, which is git-ignored.
 ## Results
 
 <!-- eval:start -->
-
-No runs yet.
+| Model | Prompt | Cases | Requirement F1 | Precision | Recall | Skill recall | Must/nice | Years | Country | Relocation | Median latency | Date |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| ollama:qwen3:8b | extract-v8 | 5/5 | 93% | 100% | 88% | 80% | 100% | 100% | 100% | 100% | 21.1 s | 2026-11-27 |
+| ollama:qwen3:8b | extract-v6 | 5/5 | 92% | 100% | 85% | 77% | 100% | 100% | 100% | 100% | 65.2 s | 2026-11-27 |
+| ollama:qwen3:8b | extract-v7 | 5/5 | 92% | 100% | 85% | 77% | 100% | 100% | 100% | 100% | 70.2 s | 2026-11-27 |
+| ollama:qwen3:8b | extract-v5 | 5/5 | 81% | 100% | 68% | 69% | 100% | 100% | 100% | 100% | 42.6 s | 2026-11-27 |
 <!-- eval:end -->
 
 ## How it is scored

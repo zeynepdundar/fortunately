@@ -1,8 +1,9 @@
 import { Output, streamText, type LanguageModel } from "ai";
+import { niceSectionHint } from "@/lib/posting-sections";
 import { Extraction } from "@/lib/schemas";
 
-/** Bump when the instructions change, so eval results stay comparable. */
-export const EXTRACTION_PROMPT_VERSION = "extract-v5";
+/** Bump when the instructions or sampling settings change, so eval results stay comparable. */
+export const EXTRACTION_PROMPT_VERSION = "extract-v8";
 
 export const EXTRACTION_INSTRUCTIONS = `You extract facts about the job and the candidate requirements from a job posting.
 Return the facts first, then one entry per requirement in the order of the posting. Never add anything the posting does not state.
@@ -17,6 +18,7 @@ FACTS
 WHAT TO INCLUDE
 - Qualifications the candidate should have: technologies, years of experience, education, spoken languages, domain knowledge, ways of working.
 - Skip the company description, benefits, salary and the team's duties. Exception: a technology named only in the duties is a "nice" requirement.
+- Read the posting to the end. Every line under Nice to have, Bonus, Preferred or Should have is a requirement too: list each one with kind "nice". When the posting has such a section, the output must contain nice entries.
 
 ONE ENTRY PER LINE
 - Each bullet or sentence that states a requirement becomes exactly one entry. Never split it and never merge two lines.
@@ -78,6 +80,12 @@ export type ExtractionResult = {
 /** qwen3's soft switch that skips its hidden reasoning step. */
 export const NO_THINK = "/no_think";
 
+/** The user message: the posting, plus a code-computed hint about nice-to-have sections. */
+export function extractionPrompt(posting: string, prefix = ""): string {
+  const hint = niceSectionHint(posting);
+  return `${prefix}Job posting:\n<posting>\n${posting}\n</posting>${hint ? `\n\n${hint}` : ""}`;
+}
+
 export function streamExtraction({
   model,
   posting,
@@ -100,8 +108,10 @@ export function streamExtraction({
   return streamText({
     model,
     instructions: EXTRACTION_INSTRUCTIONS,
-    prompt: `${prefix}Job posting:\n<posting>\n${posting}\n</posting>`,
+    prompt: extractionPrompt(posting, prefix),
     output: Output.object({ schema: Extraction }),
+    // Extraction should be repeatable: the same posting gives the same list.
+    temperature: 0,
     // Ollama ignores /no_think on its OpenAI-compatible API but honours reasoning_effort "none".
     providerOptions: disableThinking
       ? { ollama: { reasoningEffort: "none" } }
