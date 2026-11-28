@@ -3,7 +3,8 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
 import { FactsBar } from "@/components/facts-bar";
-import { hiddenReason, PreferenceBadges } from "@/components/match-summary";
+import { MatchCard } from "@/components/match-card";
+import { hiddenReason, mustTexts } from "@/components/match-summary";
 import { RequirementRow } from "@/components/requirement-row";
 import { StatusSelect } from "@/components/status-select";
 import { evaluatePosting, type Evaluation } from "@/lib/criteria/engine";
@@ -59,12 +60,6 @@ async function AnalysisView({ params }: { params: Promise<{ id: string }> }) {
     criteria.config,
   );
 
-  const mustTexts = (verdict: "missing" | "partial") =>
-    analysis.requirements
-      .filter(
-        (r, i) => r.kind === "must" && analysis.matches[i]?.verdict === verdict,
-      )
-      .map((r) => r.text);
   const verdicts = countVerdicts(analysis.matches);
   const matched = analysis.matches.some(Boolean);
   const must = analysis.requirements.filter((r) => r.kind === "must").length;
@@ -138,8 +133,16 @@ async function AnalysisView({ params }: { params: Promise<{ id: string }> }) {
           hasCv={Boolean(profile?.cv)}
           analysisId={analysis.id}
           mustByVerdict={{
-            missing: mustTexts("missing"),
-            partial: mustTexts("partial"),
+            missing: mustTexts(
+              analysis.requirements,
+              analysis.matches,
+              "missing",
+            ),
+            partial: mustTexts(
+              analysis.requirements,
+              analysis.matches,
+              "partial",
+            ),
           }}
           facts={{ country: analysis.country, workMode: analysis.workMode }}
         />
@@ -244,11 +247,6 @@ function MatchSummary({
     );
   }
 
-  // "Not stated" facts already sit in the posting details; repeat one here only
-  // when it is the reason the posting is hidden.
-  const preferences = evaluation.preferences.filter(
-    (p) => p.status !== "unknown" || p.hidden,
-  );
   const hidden = evaluation.preferences.filter((p) => p.hidden);
   const status =
     evaluation.bucket === "filtered_out"
@@ -256,45 +254,13 @@ function MatchSummary({
       : evaluation.bucket === "below_threshold"
         ? `Below threshold in Postings: ${evaluation.belowThreshold.join(", ")}`
         : `Using ${usingDefaults ? "the default preferences" : "your preferences"}`;
-  const gaps = [
-    { label: "Missing", items: mustByVerdict.missing },
-    { label: "Partly met", items: mustByVerdict.partial },
-  ].filter((g) => g.items.length > 0);
 
   return (
-    <section
-      aria-labelledby="match-heading"
-      className="flex gap-4 rounded-lg border border-neutral-200 p-4 dark:border-neutral-800"
-    >
-      <div className="min-w-0 flex-1">
-        <h2 id="match-heading" className="text-lg font-semibold">
-          Your match
-        </h2>
-        {gaps.length > 0 ? (
-          <div className="mt-1 flex flex-col gap-2" data-testid="gaps">
-            {gaps.map((g) => (
-              <div key={g.label}>
-                <h3 className="text-xs font-medium text-neutral-500">
-                  {g.label}
-                </h3>
-                <ul className="mt-0.5 list-disc pl-4 text-sm">
-                  {g.items.map((text) => (
-                    <li key={text}>{text}</li>
-                  ))}
-                </ul>
-              </div>
-            ))}
-          </div>
-        ) : (
-          <p className="mt-1 text-sm">Every must-have is proven by your CV.</p>
-        )}
-        {match.nice.total > 0 && (
-          <p className="mt-1 text-xs text-neutral-500 tabular-nums">
-            {match.nice.met} of {match.nice.total} nice-to-haves met
-          </p>
-        )}
-        <PreferenceBadges preferences={preferences} className="mt-2" />
-        <p className="mt-3 text-xs text-neutral-600 dark:text-neutral-400">
+    <MatchCard
+      evaluation={evaluation}
+      mustByVerdict={mustByVerdict}
+      footer={
+        <>
           {status} ·{" "}
           <Link href="/profile/preferences" className="underline">
             Adjust preferences
@@ -309,17 +275,8 @@ function MatchSummary({
               to check years, countries and relocation
             </>
           )}
-        </p>
-      </div>
-      <div className="flex w-28 shrink-0 flex-col items-end">
-        <span
-          className="text-3xl font-semibold tabular-nums"
-          data-testid="must-met"
-        >
-          {match.must.met}/{match.must.total}
-        </span>
-        <span className="text-xs text-neutral-500">must-haves met</span>
-      </div>
-    </section>
+        </>
+      }
+    />
   );
 }

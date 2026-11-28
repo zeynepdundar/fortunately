@@ -6,6 +6,8 @@
 
 Paste a job posting (or its link). Fortunately streams out the requirements as they are extracted, matches each one to your CV with the **exact CV line that proves it**, and shows which skills you are missing across all the roles you look at.
 
+<p align="center"><img src="docs/demo.gif" width="800" alt="Screen recording: a sample posting is analysed, its requirements stream in, they are matched to a CV and the result page shows 3 of 6 must-haves met with the cited CV lines."></p>
+
 **Status:** work in progress — MVP target: December 2026. Live demo: `fortunately.vercel.app` (coming soon).
 
 ## Features (MVP)

@@ -98,3 +98,14 @@ export function hiddenReason(
         : `${WORK_MODE_WORD[facts.workMode]} work is not one of your accepted work modes`;
   }
 }
+
+/** Texts of the must-haves with the given verdict, in posting order. */
+export function mustTexts(
+  requirements: { kind: "must" | "nice"; text: string }[],
+  matches: ({ verdict: "met" | "partial" | "missing" } | undefined)[],
+  verdict: "missing" | "partial",
+): string[] {
+  return requirements
+    .filter((r, i) => r.kind === "must" && matches[i]?.verdict === verdict)
+    .map((r) => r.text);
+}
